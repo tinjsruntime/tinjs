@@ -22,7 +22,7 @@ std::string readFile(const std::string &filePath)
     std::ifstream file(filePath);
     
     if (!file.good())
-        return "";
+        throw std::runtime_error("File not found");
 
     std::stringstream ss;
 
@@ -37,6 +37,6 @@ std::string readFile(const std::string &filePath)
 
 std::string absolute(const std::string &relativePath, const std::string &basePath)
 {
-    auto fullPath = std::filesystem::canonical(std::filesystem::path(basePath) / relativePath);
+    auto fullPath = std::filesystem::path(basePath + relativePath).lexically_normal();
     return fullPath.string();
 }
