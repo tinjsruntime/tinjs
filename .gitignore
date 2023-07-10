@@ -1,0 +1,5 @@
+tin
+.vscode
+/build
+/bin
+!/bin/.gitkeep
