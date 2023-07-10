@@ -4,8 +4,7 @@ const arr = ["Hello", "Hola", "Hallo"];
 
 describe('Array', () => {
     test('random()', () => {
-        const random = arr.random();
-        expect(arr.includes(random)).toEqual(true);
+        expect(arr.includes(arr.random())).toEqual(true);
     });
 
     test('first()', () => {
@@ -14,5 +13,21 @@ describe('Array', () => {
 
     test('last()', () => {
         expect(arr.last()).toEqual(arr[arr.length - 1]);
+    });
+});
+
+const emptyArr = [];
+
+describe('Array - empty', () => {
+    test('random()', () => {
+        expect(emptyArr.random()).toEqual(undefined);
+    });
+
+    test('first()', () => {
+        expect(emptyArr.first()).toEqual(undefined);
+    });
+
+    test('last()', () => {
+        expect(emptyArr.last()).toEqual(undefined);
     });
 });

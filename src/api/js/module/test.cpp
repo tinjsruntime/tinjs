@@ -6,29 +6,25 @@
 #include "../../cpp/jsc_util.hpp"
 
 using namespace jscUtil;
- 
-namespace testMod
-{
-    JSValueRef describeCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
-    {
-        if (argumentCount != 2)
-        {
+
+namespace testMod {
+    JSValueRef describeCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
+                                const JSValueRef arguments[], JSValueRef *exception) {
+        if (argumentCount != 2) {
             JSStringRef error = JSStringCreateWithUTF8CString("describe requires 2 arguments");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
             return JSValueMakeUndefined(ctx);
         }
 
-        if (!JSValueIsString(ctx, arguments[0]))
-        {
+        if (!JSValueIsString(ctx, arguments[0])) {
             JSStringRef error = JSStringCreateWithUTF8CString("describe requires a string argument");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
             return JSValueMakeUndefined(ctx);
         }
 
-        if (!JSValueIsObject(ctx, arguments[1]))
-        {
+        if (!JSValueIsObject(ctx, arguments[1])) {
             JSStringRef error = JSStringCreateWithUTF8CString("describe requires a function argument");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
@@ -46,32 +42,29 @@ namespace testMod
         return JSValueMakeUndefined(ctx);
     }
 
-    JSValueRef testCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
-    {
+    JSValueRef testCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
+                            const JSValueRef arguments[], JSValueRef *exception) {
         JSStringRef group = JSStringCreateWithUTF8CString("_group");
         JSValueRef groupValue = JSObjectGetProperty(ctx, thisObject, group, exception);
         JSStringRelease(group);
 
         auto grpstr = toString(ctx, groupValue);
 
-        if (argumentCount != 2)
-        {
+        if (argumentCount != 2) {
             JSStringRef error = JSStringCreateWithUTF8CString("describe requires 2 arguments");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
             return JSValueMakeUndefined(ctx);
         }
 
-        if (!JSValueIsString(ctx, arguments[0]))
-        {
+        if (!JSValueIsString(ctx, arguments[0])) {
             JSStringRef error = JSStringCreateWithUTF8CString("describe requires a string argument");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
             return JSValueMakeUndefined(ctx);
         }
 
-        if (!JSValueIsObject(ctx, arguments[1]))
-        {
+        if (!JSValueIsObject(ctx, arguments[1])) {
             JSStringRef error = JSStringCreateWithUTF8CString("describe requires a function argument");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
@@ -84,7 +77,8 @@ namespace testMod
         JSStringRef error = JSStringCreateWithUTF8CString("error");
         JSStringRef message = JSStringCreateWithUTF8CString("message");
         JSObjectSetProperty(ctx, meta, error, JSValueMakeBoolean(ctx, false), kJSPropertyAttributeNone, exception);
-        JSObjectSetProperty(ctx, meta, message, JSValueMakeString(ctx, JSStringCreateWithUTF8CString("")), kJSPropertyAttributeNone, exception);
+        JSObjectSetProperty(ctx, meta, message, JSValueMakeString(ctx, JSStringCreateWithUTF8CString("")),
+                            kJSPropertyAttributeNone, exception);
 
         JSStringRef _meta = JSStringCreateWithUTF8CString("_meta");
         JSObjectSetProperty(ctx, thisObject, _meta, meta, kJSPropertyAttributeNone, exception);
@@ -100,25 +94,26 @@ namespace testMod
 
         auto againstr = toString(ctx, arguments[0]);
 
-        if (JSValueToBoolean(ctx, errorValue))
-        {
+        if (JSValueToBoolean(ctx, errorValue)) {
             JSStringRef message_String = JSStringCreateWithUTF8CString("message");
             JSValueRef messageValue = JSObjectGetProperty(ctx, newMeta, message_String, exception);
             JSStringRelease(message_String);
 
             auto messageString = toString(ctx, messageValue);
 
-            std::cout << colors["red"] << "✗ " << grpstr << colors["reset"] << " > " << colors["red"] << againstr << colors["reset"] << std::endl;
+            std::cout << colors["red"] << "✗ " << grpstr << colors["reset"] << " > " << colors["red"] << againstr
+                      << colors["reset"] << std::endl;
             std::cout << messageString << std::endl;
             return JSValueMakeUndefined(ctx);
         }
 
-        std::cout << colors["green"] << "✓ " << grpstr << colors["reset"] << " > " << colors["green"] << againstr << colors["reset"] << std::endl;
+        std::cout << colors["green"] << "✓ " << grpstr << colors["reset"] << " > " << colors["green"] << againstr
+                  << colors["reset"] << std::endl;
         return JSValueMakeUndefined(ctx);
     }
 
-    JSValueRef toEqualCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
-    {
+    JSValueRef toEqualCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
+                               const JSValueRef arguments[], JSValueRef *exception) {
         JSStringRef _meta = JSStringCreateWithUTF8CString("_meta");
         JSObjectRef meta = JSValueToObject(ctx, JSObjectGetProperty(ctx, thisObject, _meta, nullptr), nullptr);
         JSStringRelease(_meta);
@@ -127,13 +122,11 @@ namespace testMod
         JSValueRef errorValue = JSObjectGetProperty(ctx, meta, error, nullptr);
         JSStringRelease(error);
 
-        if (JSValueToBoolean(ctx, errorValue))
-        {
+        if (JSValueToBoolean(ctx, errorValue)) {
             return JSValueMakeUndefined(ctx);
         }
 
-        if (argumentCount != 1)
-        {
+        if (argumentCount != 1) {
             JSStringRef __error = JSStringCreateWithUTF8CString("toEqual requires 1 argument");
             *exception = JSValueMakeString(ctx, __error);
             JSStringRelease(__error);
@@ -145,8 +138,7 @@ namespace testMod
 
         bool ret = JSValueIsEqual(ctx, arg, value, nullptr);
 
-        if (!ret)
-        {
+        if (!ret) {
             JSObjectRef nmeta = JSObjectMake(ctx, NULL, NULL);
             JSStringRef error = JSStringCreateWithUTF8CString("error");
             JSStringRef message = JSStringCreateWithUTF8CString("message");
@@ -157,20 +149,22 @@ namespace testMod
 
             std::string out = colors["red"] + colors["bold"] + "Expected: " + colors["reset"] +
                               colors["red"] + againstr + "\n" +
-                              colors["yellow"] + colors["bold"] + "Received: " + colors["reset"] + colors["yellow"] + valuestr + colors["reset"];
+                              colors["yellow"] + colors["bold"] + "Received: " + colors["reset"] + colors["yellow"] +
+                              valuestr + colors["reset"];
 
-            JSObjectSetProperty(ctx, nmeta, message, JSValueMakeString(ctx, JSStringCreateWithUTF8CString(out.c_str())), kJSPropertyAttributeNone, nullptr);
+            JSObjectSetProperty(ctx, nmeta, message, JSValueMakeString(ctx, JSStringCreateWithUTF8CString(out.c_str())),
+                                kJSPropertyAttributeNone, nullptr);
 
-            JSObjectSetProperty(ctx, JSContextGetGlobalObject(ctx), JSStringCreateWithUTF8CString("_meta"), nmeta, kJSPropertyAttributeNone, nullptr);
+            JSObjectSetProperty(ctx, JSContextGetGlobalObject(ctx), JSStringCreateWithUTF8CString("_meta"), nmeta,
+                                kJSPropertyAttributeNone, nullptr);
         }
 
         return JSValueMakeUndefined(ctx);
     }
 
-    JSValueRef expectCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
-    {
-        if (argumentCount != 1)
-        {
+    JSValueRef expectCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
+                              const JSValueRef arguments[], JSValueRef *exception) {
+        if (argumentCount != 1) {
             JSStringRef error = JSStringCreateWithUTF8CString("expect requires 1 argument");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
@@ -185,16 +179,22 @@ namespace testMod
         JSObjectSetProperty(ctx, obj, value, arg, kJSPropertyAttributeNone, NULL);
 
         JSStringRef toEqual = JSStringCreateWithUTF8CString("toEqual");
-        JSObjectSetProperty(ctx, obj, toEqual, JSObjectMakeFunctionWithCallback(ctx, toEqual, toEqualCallback), kJSPropertyAttributeNone, NULL);
+        JSObjectSetProperty(ctx, obj, toEqual, JSObjectMakeFunctionWithCallback(ctx, toEqual, toEqualCallback),
+                            kJSPropertyAttributeNone, NULL);
 
         return obj;
     }
 
-    JSObjectRef init_test_module(JSContextRef context, JSObjectRef *exports)
-    {
-        JSObjectSetProperty(context, *exports, JSStringCreateWithUTF8CString("describe"), JSObjectMakeFunctionWithCallback(context, JSStringCreateWithUTF8CString("describe"), describeCallback), kJSPropertyAttributeNone, NULL);
-        JSObjectSetProperty(context, *exports, JSStringCreateWithUTF8CString("test"), JSObjectMakeFunctionWithCallback(context, JSStringCreateWithUTF8CString("test"), testCallback), kJSPropertyAttributeNone, NULL);
-        JSObjectSetProperty(context, *exports, JSStringCreateWithUTF8CString("expect"), JSObjectMakeFunctionWithCallback(context, JSStringCreateWithUTF8CString("expect"), expectCallback), kJSPropertyAttributeNone, NULL);
+    JSObjectRef init_test_module(JSContextRef context, JSObjectRef *exports) {
+        JSObjectSetProperty(context, *exports, JSStringCreateWithUTF8CString("describe"),
+                            JSObjectMakeFunctionWithCallback(context, JSStringCreateWithUTF8CString("describe"),
+                                                             describeCallback), kJSPropertyAttributeNone, NULL);
+        JSObjectSetProperty(context, *exports, JSStringCreateWithUTF8CString("test"),
+                            JSObjectMakeFunctionWithCallback(context, JSStringCreateWithUTF8CString("test"),
+                                                             testCallback), kJSPropertyAttributeNone, NULL);
+        JSObjectSetProperty(context, *exports, JSStringCreateWithUTF8CString("expect"),
+                            JSObjectMakeFunctionWithCallback(context, JSStringCreateWithUTF8CString("expect"),
+                                                             expectCallback), kJSPropertyAttributeNone, NULL);
         return *exports;
     }
 }

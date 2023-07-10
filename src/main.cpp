@@ -5,24 +5,24 @@
 #include <string>
 
 using namespace cppFs;
-int main(int argc, char *argv[])
-{
+
+int main(int argc, char *argv[]) {
     srand(time(NULL));
-    if (argc != 3)
-    {
+
+    if (argc != 3) {
         std::cerr << "Usage: " << argv[0] << " <(run|test)> <filename>" << std::endl;
         return 1;
     }
 
     auto mode = std::string(argv[1]);
 
-    if (mode != "run" && mode != "test")
-    {
+    if (mode != "run" && mode != "test") {
         std::cerr << "Usage: " << argv[0] << " <(run|test)> <filename>" << std::endl;
+
         return 1;
     }
 
-    JSGlobalContextRef context = JSGlobalContextCreate(0);
+    auto context = JSGlobalContextCreate(0);
     JSValueRef exception = nullptr;
 
     auto globalObject = JSContextGetGlobalObject(context);
@@ -31,32 +31,30 @@ int main(int argc, char *argv[])
 
     auto filename = absolute(argv[2], getcwd());
     auto dirname = parent(filename);
-    global::define(context, &globalObject, dirname, filename, &exception, &exportsObject, mode);
 
+    global::define(context, &globalObject, dirname, filename, &exception, &exportsObject, mode);
     std::string fileContents;
 
-    try
-    {
+    try {
         fileContents = readFile(filename);
-    }
-    catch (const std::runtime_error &error)
-    {
+    } catch (const std::runtime_error &error) {
         std::cerr << "Error reading file: " << error.what() << std::endl;
+
         return 1;
     }
 
-    JSStringRef code = JSStringCreateWithUTF8CString(fileContents.c_str());
-    JSValueRef value = JSEvaluateScript(context, code, moduleObject, JSStringCreateWithUTF8CString(argv[2]), 1, &exception);
+    auto code = JSStringCreateWithUTF8CString(fileContents.c_str());
+    auto argv2str = JSStringCreateWithUTF8CString(argv[2]);
+    auto value = JSEvaluateScript(context, code, moduleObject, argv2str, 1, &exception);
+
     JSStringRelease(code);
 
-    if (exception != nullptr)
-    {
-        JSStringRef exceptionString = JSValueToStringCopy(context, exception, nullptr);
+    if (exception != nullptr) {
+        auto exceptionString = JSValueToStringCopy(context, exception, nullptr);
 
-        if (exceptionString != nullptr)
-        {
-            auto err = toString(context, exception);
-            std::cerr << "Error: " << err << std::endl;
+        if (exceptionString != nullptr) {
+            std::cerr << "Error: " << toString(context, exception) << std::endl;
+
             JSStringRelease(exceptionString);
         }
 
@@ -64,5 +62,6 @@ int main(int argc, char *argv[])
     }
 
     JSGlobalContextRelease(context);
+
     return 0;
 }

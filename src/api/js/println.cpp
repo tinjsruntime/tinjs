@@ -5,34 +5,28 @@
 #include "../cpp/jsc_util.cpp"
 
 using namespace jscUtil;
-namespace println
-{
-    void printValue(JSContextRef ctx, JSValueRef value, bool color)
-    {
+namespace println {
+    void printValue(JSContextRef ctx, JSValueRef value, bool color) {
         auto str = toString(ctx, value);
 
         std::cout << str;
     }
 
-    void printArray(JSContextRef ctx, JSObjectRef array, bool color)
-    {
+    void printArray(JSContextRef ctx, JSObjectRef array, bool color) {
         int length = getArrayLength(ctx, array);
 
-        if (length == 0)
-        {
+        if (length == 0) {
             std::cout << "[]";
             return;
         }
 
         std::cout << "[";
 
-        for (size_t i = 0; i < length; i++)
-        {
+        for (size_t i = 0; i < length; i++) {
             JSValueRef element = JSObjectGetPropertyAtIndex(ctx, array, i, nullptr);
             rawPrint(ctx, element, JSValueGetType(ctx, element), true);
 
-            if (i != length - 1)
-            {
+            if (i != length - 1) {
                 std::cout << ", ";
             }
         }
@@ -40,22 +34,19 @@ namespace println
         std::cout << "]";
     }
 
-    void printObject(JSContextRef ctx, JSObjectRef object, bool color)
-    {
+    void printObject(JSContextRef ctx, JSObjectRef object, bool color) {
 
         JSPropertyNameArrayRef propertyArray = JSObjectCopyPropertyNames(ctx, object);
         size_t count = JSPropertyNameArrayGetCount(propertyArray);
 
-        if (count == 0)
-        {
+        if (count == 0) {
             std::cout << "{}";
             return;
         }
 
         std::cout << "{ ";
 
-        for (size_t i = 0; i < count; i++)
-        {
+        for (size_t i = 0; i < count; i++) {
             JSStringRef propertyName = JSPropertyNameArrayGetNameAtIndex(propertyArray, i);
             JSValueRef propertyValue = JSObjectGetProperty(ctx, object, propertyName, nullptr);
 
@@ -65,8 +56,7 @@ namespace println
 
             rawPrint(ctx, propertyValue, JSValueGetType(ctx, propertyValue), true);
 
-            if (i != count - 1)
-            {
+            if (i != count - 1) {
                 std::cout << ", ";
             }
 
@@ -78,10 +68,9 @@ namespace println
         std::cout << " }";
     }
 
-    JSValueRef printlnCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
-    {
-        for (size_t i = 0; i < argumentCount; i++)
-        {
+    JSValueRef printlnCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
+                               const JSValueRef arguments[], JSValueRef *exception) {
+        for (size_t i = 0; i < argumentCount; i++) {
             JSValueRef argument = arguments[i];
             JSType type = JSValueGetType(ctx, argument);
 
@@ -94,68 +83,57 @@ namespace println
         return JSValueMakeUndefined(ctx);
     }
 
-    void rawPrint(JSContextRef ctx, JSValueRef argument, JSType type, bool colorString)
-    {
-        switch (type)
-        {
-        case kJSTypeUndefined:
-            std::cout << colors["gray"] << "undefined" << colors["reset"];
-            break;
+    void rawPrint(JSContextRef ctx, JSValueRef argument, JSType type, bool colorString) {
+        switch (type) {
+            case kJSTypeUndefined:
+                std::cout << colors["gray"] << "undefined" << colors["reset"];
+                break;
 
-        case kJSTypeNull:
-            std::cout << colors["gray"] << "null" << colors["gray"];
-            break;
+            case kJSTypeNull:
+                std::cout << colors["gray"] << "null" << colors["gray"];
+                break;
 
-        case kJSTypeBoolean:
-            std::cout << colors["yellow"] << (JSValueToBoolean(ctx, argument) ? "true" : "false") << colors["reset"];
-            break;
+            case kJSTypeBoolean:
+                std::cout << colors["yellow"] << (JSValueToBoolean(ctx, argument) ? "true" : "false")
+                          << colors["reset"];
+                break;
 
-        case kJSTypeNumber:
-            std::cout << colors["yellow"] << JSValueToNumber(ctx, argument, nullptr) << colors["reset"];
-            break;
+            case kJSTypeNumber:
+                std::cout << colors["yellow"] << JSValueToNumber(ctx, argument, nullptr) << colors["reset"];
+                break;
 
-        case kJSTypeString:
-            if (colorString == true)
-            {
-                std::cout << colors["green"] << '"' << toString(ctx, argument) << '"' << colors["reset"];
-            }
-            else
-            {
-                printValue(ctx, argument, true);
-            }
-            break;
-
-        case kJSTypeObject:
-            if (JSValueIsArray(ctx, argument))
-            {
-                printArray(ctx, JSValueToObject(ctx, argument, nullptr), true);
-            }
-            else if (JSObjectIsFunction(ctx, JSValueToObject(ctx, argument, nullptr)))
-            {
-                auto str = toString(ctx, argument);
-
-                if (str.find("class") != std::string::npos)
-                {
-                    std::string className = str.substr(str.find("class ") + 6, str.find("{") - str.find("class ") - 6);
-                    std::string trimmedClassName = className.substr(0, className.find(" "));
-                    bool isEmpty = trimmedClassName == "";
-                    std::string finalClass = "[Class" + (isEmpty ? "]" : " " + trimmedClassName + "]");
-                    std::cout << colors["cyan"] << finalClass << colors["reset"];
+            case kJSTypeString:
+                if (colorString == true) {
+                    std::cout << colors["green"] << '"' << toString(ctx, argument) << '"' << colors["reset"];
+                } else {
+                    printValue(ctx, argument, true);
                 }
-                else
-                {
-                    std::cout << colors["magenta"] << "[Function]" << colors["reset"];
-                }
-            }
-            else
-            {
-                printObject(ctx, JSValueToObject(ctx, argument, nullptr), true);
-            }
-            break;
+                break;
 
-        default:
-            printValue(ctx, argument, false);
-            break;
+            case kJSTypeObject:
+                if (JSValueIsArray(ctx, argument)) {
+                    printArray(ctx, JSValueToObject(ctx, argument, nullptr), true);
+                } else if (JSObjectIsFunction(ctx, JSValueToObject(ctx, argument, nullptr))) {
+                    auto str = toString(ctx, argument);
+
+                    if (str.find("class") != std::string::npos) {
+                        std::string className = str.substr(str.find("class ") + 6,
+                                                           str.find("{") - str.find("class ") - 6);
+                        std::string trimmedClassName = className.substr(0, className.find(" "));
+                        bool isEmpty = trimmedClassName == "";
+                        std::string finalClass = "[Class" + (isEmpty ? "]" : " " + trimmedClassName + "]");
+                        std::cout << colors["cyan"] << finalClass << colors["reset"];
+                    } else {
+                        std::cout << colors["magenta"] << "[Function]" << colors["reset"];
+                    }
+                } else {
+                    printObject(ctx, JSValueToObject(ctx, argument, nullptr), true);
+                }
+                break;
+
+            default:
+                printValue(ctx, argument, false);
+                break;
         }
     }
 }
