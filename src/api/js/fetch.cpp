@@ -3,6 +3,7 @@
 #include <curl/curl.h>
 #include <string>
 
+namespace fetch {
 JSValueRef jsonify(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
 {
     // Get the response object from the function call
@@ -26,7 +27,7 @@ size_t writeCallback(char *contents, size_t size, size_t nmemb, std::string *res
     return totalSize;
 }
 
-JSValueRef fetchc(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
+JSValueRef fetch(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
 {
     if (argumentCount != 1 || !JSValueIsString(ctx, arguments[0]))
     {
@@ -88,4 +89,5 @@ JSValueRef fetchc(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject
     JSObjectSetProperty(ctx, responseObj, responseProp, JSValueMakeString(ctx, responseValue), kJSPropertyAttributeNone, NULL);
     JSObjectSetProperty(ctx, responseObj, jsonProp, JSObjectMakeFunctionWithCallback(ctx, nullptr, jsonify), kJSPropertyAttributeNone, NULL);
     return responseObj;
+}
 }

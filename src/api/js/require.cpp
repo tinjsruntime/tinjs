@@ -7,6 +7,7 @@
 #include "module/test.cpp"
 #include "module/fs.cpp"
 
+namespace require {
 JSValueRef requireCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
 {
     if (argumentCount != 1)
@@ -33,7 +34,7 @@ JSValueRef requireCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef t
         JSStringRelease(dirnameKey);
 
         auto dirnameString = toString(ctx, dirnameValue);
-        finalPath = absolute(path, dirnameString);
+        finalPath = cppFs::absolute(path, dirnameString);
     }
     else
     {
@@ -48,7 +49,7 @@ JSValueRef requireCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef t
         if (moduleName == "fs")
         {
             JSObjectRef fsObject = JSObjectMake(ctx, nullptr, nullptr);
-            return init_fs_module(ctx, &fsObject);
+            return fsMod::init_fs_module(ctx, &fsObject);
         }
         else if (moduleName == "test")
         {
@@ -59,7 +60,7 @@ JSValueRef requireCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef t
             }
 
             JSObjectRef testObject = JSObjectMake(ctx, nullptr, nullptr);
-            return init_test_module(ctx, &testObject);
+            return testMod::init_test_module(ctx, &testObject);
         }
         else
         {
@@ -71,7 +72,7 @@ JSValueRef requireCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef t
     std::string fileContents;
     try
     {
-        fileContents = readFile(finalPath);
+        fileContents = cppFs::readFile(finalPath);
     }
     catch (const std::runtime_error &error)
     {
@@ -84,8 +85,8 @@ JSValueRef requireCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef t
     JSObjectRef _moduleObject = JSObjectMake(ctx, nullptr, nullptr);
     JSObjectRef _exportsObject = JSObjectMake(ctx, nullptr, nullptr);
 
-    std::string dirname = parent(finalPath);
-    DefineGlobal(ctx, &_globalObject, dirname, finalPath, exception, &_exportsObject, scopeStr);
+    std::string dirname = cppFs::parent(finalPath);
+    global::define(ctx, &_globalObject, dirname, finalPath, exception, &_exportsObject, scopeStr);
 
     // Evaluate the required file
     JSStringRef code = JSStringCreateWithUTF8CString(fileContents.c_str());
@@ -95,4 +96,5 @@ JSValueRef requireCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef t
 
     // Return the exports object of the required module
     return _exportsObject;
+}
 }

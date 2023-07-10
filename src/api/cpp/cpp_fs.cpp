@@ -4,38 +4,41 @@
 #include <unistd.h>
 #include <filesystem>
 
-std::string _getcwd()
+namespace cppFs
 {
-    return std::filesystem::current_path();
-}
+    std::string getcwd()
+    {
+        return std::filesystem::current_path();
+    }
 
-// /x/smthn/b.js -> /x/smthn
-std::string parent(const std::string &filename)
-{
-    return std::filesystem::path(filename).parent_path().string();
-}
+    // /x/smthn/b.js -> /x/smthn
+    std::string parent(const std::string &filename)
+    {
+        return std::filesystem::path(filename).parent_path().string();
+    }
 
-// https://github.com/SenkoraJS/senkora/main/src/api/Senkora.cpp#L63C1-L79C1
-std::string readFile(const std::string &filePath)
-{
-    std::ifstream file(filePath);
+    // https://github.com/SenkoraJS/senkora/main/src/api/Senkora.cpp#L63C1-L79C1
+    std::string readFile(const std::string &filePath)
+    {
+        std::ifstream file(filePath);
 
-    if (!file.good())
-        throw std::runtime_error("File not found");
+        if (!file.good())
+            throw std::runtime_error("File not found");
 
-    std::stringstream ss;
+        std::stringstream ss;
 
-    ss << file.rdbuf();
+        ss << file.rdbuf();
 
-    std::string out = ss.str();
+        std::string out = ss.str();
 
-    file.close();
+        file.close();
 
-    return out;
-}
+        return out;
+    }
 
-std::string absolute(const std::string &relativePath, const std::string &basePath)
-{
-    auto fullPath = std::filesystem::path(basePath + "/" + relativePath).lexically_normal();
-    return fullPath.string();
+    std::string absolute(const std::string &relativePath, const std::string &basePath)
+    {
+        auto fullPath = std::filesystem::path(basePath + "/" + relativePath).lexically_normal();
+        return fullPath.string();
+    }
 }

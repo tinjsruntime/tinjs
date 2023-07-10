@@ -4,6 +4,7 @@
 #include "api/js/global.cpp"
 #include <string>
 
+using namespace cppFs;
 int main(int argc, char *argv[])
 {
     srand(time(NULL));
@@ -28,9 +29,9 @@ int main(int argc, char *argv[])
     auto moduleObject = JSObjectMake(context, nullptr, nullptr);
     auto exportsObject = JSObjectMake(context, nullptr, nullptr);
 
-    auto filename = absolute(argv[2], _getcwd());
+    auto filename = absolute(argv[2], getcwd());
     auto dirname = parent(filename);
-    DefineGlobal(context, &globalObject, dirname, filename, &exception, &exportsObject, mode);
+    global::define(context, &globalObject, dirname, filename, &exception, &exportsObject, mode);
 
     std::string fileContents;
 

@@ -4,7 +4,9 @@
 #include <JavaScriptCore/JavaScript.h>
 #include <string>
 
-std::string toString(JSContextRef ctx, JSValueRef value);
-int getArrayLength(JSContextRef ctx, JSObjectRef array);
+namespace jscUtil {
+    std::string toString(JSContextRef ctx, JSValueRef value);
+    int getArrayLength(JSContextRef ctx, JSObjectRef array);
+}
 
 #endif

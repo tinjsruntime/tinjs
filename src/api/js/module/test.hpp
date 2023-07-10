@@ -1,8 +1,10 @@
-#ifndef TEST_MODULE_H
-#define TEST_MODULE_H
+#ifndef TEST_MODULE_HPP
+#define TEST_MODULE_HPP
 
 #include <JavaScriptCore/JavaScript.h>
 
-JSObjectRef init_test_module(JSContextRef context, JSObjectRef *exports);
+namespace testMod {
+    JSObjectRef init_test_module(JSContextRef context, JSObjectRef *exports);
+}
 
 #endif

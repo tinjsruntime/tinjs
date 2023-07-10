@@ -8,7 +8,8 @@
 #include "fetch.cpp"
 #include "prototype/_js_Array.cpp"
 
-void DefineGlobal(JSContextRef context, JSObjectRef *globalObject, std::string dirname, std::string fullname, JSValueRef *exception, JSObjectRef *exportsObject, std::string mode)
+namespace global {
+void define(JSContextRef context, JSObjectRef *globalObject, std::string dirname, std::string fullname, JSValueRef *exception, JSObjectRef *exportsObject, std::string mode)
 {
     // Create module system
     JSObjectRef moduleObject = JSObjectMake(context, nullptr, nullptr);
@@ -23,19 +24,19 @@ void DefineGlobal(JSContextRef context, JSObjectRef *globalObject, std::string d
 
     // add println function to global context
     JSStringRef println = JSStringCreateWithUTF8CString("println");
-    JSObjectSetProperty(context, *globalObject, println, JSObjectMakeFunctionWithCallback(context, nullptr, printlnCallback), kJSPropertyAttributeNone, exception);
+    JSObjectSetProperty(context, *globalObject, println, JSObjectMakeFunctionWithCallback(context, nullptr, println::printlnCallback), kJSPropertyAttributeNone, exception);
     JSStringRelease(println);
 
     JSStringRef require = JSStringCreateWithUTF8CString("require");
-    JSObjectSetProperty(context, *globalObject, require, JSObjectMakeFunctionWithCallback(context, nullptr, requireCallback), kJSPropertyAttributeNone, exception);
+    JSObjectSetProperty(context, *globalObject, require, JSObjectMakeFunctionWithCallback(context, nullptr, require::requireCallback), kJSPropertyAttributeNone, exception);
     JSStringRelease(require);
 
     JSStringRef fetchName = JSStringCreateWithUTF8CString("fetch");
-    JSObjectRef fetchFunction = JSObjectMakeFunctionWithCallback(context, fetchName, fetchc);
+    JSObjectRef fetchFunction = JSObjectMakeFunctionWithCallback(context, fetchName, fetch::fetch);
     JSObjectSetProperty(context, *globalObject, fetchName, fetchFunction, kJSPropertyAttributeNone, NULL);
     JSStringRelease(fetchName);
 
-    std::string cwd = _getcwd();
+    std::string cwd = cppFs::getcwd();
     JSStringRef execcwd = JSStringCreateWithUTF8CString("__execcwd");
     JSStringRef cwdString = JSStringCreateWithUTF8CString(cwd.c_str());
     JSObjectSetProperty(context, *globalObject, execcwd, JSValueMakeString(context, cwdString), kJSPropertyAttributeNone, exception);
@@ -63,7 +64,8 @@ void DefineGlobal(JSContextRef context, JSObjectRef *globalObject, std::string d
 
     JSObjectRef arrayPrototype = (JSObjectRef)JSObjectGetProperty(context, arrayConstructor, JSStringCreateWithUTF8CString("prototype"), exception);
 
-    JSObjectSetProperty(context, arrayPrototype, randomName, JSObjectMakeFunctionWithCallback(context, randomName, random), kJSPropertyAttributeNone, exception);
-    JSObjectSetProperty(context, arrayPrototype, firstName, JSObjectMakeFunctionWithCallback(context, firstName, first), kJSPropertyAttributeNone, exception);
-    JSObjectSetProperty(context, arrayPrototype, lastName, JSObjectMakeFunctionWithCallback(context, lastName, last), kJSPropertyAttributeNone, exception);
+    JSObjectSetProperty(context, arrayPrototype, randomName, JSObjectMakeFunctionWithCallback(context, randomName, ArrayProto::random), kJSPropertyAttributeNone, exception);
+    JSObjectSetProperty(context, arrayPrototype, firstName, JSObjectMakeFunctionWithCallback(context, firstName, ArrayProto::first), kJSPropertyAttributeNone, exception);
+    JSObjectSetProperty(context, arrayPrototype, lastName, JSObjectMakeFunctionWithCallback(context, lastName, ArrayProto::last), kJSPropertyAttributeNone, exception);
+}
 }

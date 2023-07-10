@@ -10,6 +10,9 @@
 #include <unistd.h>
 #include "../../cpp/jsc_util.hpp"
 
+using namespace jscUtil;
+
+namespace fsMod {
 // readFileCallback
 
 JSValueRef readFileCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
@@ -218,4 +221,5 @@ JSObjectRef init_fs_module(JSContextRef context, JSObjectRef *exports)
     JSObjectSetProperty(context, *exports, exists, JSObjectMakeFunctionWithCallback(context, nullptr, existsCallback), kJSPropertyAttributeNone, nullptr);
     JSStringRelease(exists);
     return *exports;
+}
 }

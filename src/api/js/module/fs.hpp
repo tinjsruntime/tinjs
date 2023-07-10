@@ -3,6 +3,8 @@
 
 #include <JavaScriptCore/JavaScript.h>
 
-JSObjectRef init_fs_module(JSContextRef context, JSObjectRef *exports);
+namespace fsMod {
+    JSObjectRef init_fs_module(JSContextRef context, JSObjectRef *exports);
+}
 
 #endif
