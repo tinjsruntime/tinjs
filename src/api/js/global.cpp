@@ -7,8 +7,9 @@
 #include "require.cpp"
 #include "fetch.cpp"
 
-void DefineGlobal(JSContextRef context, JSObjectRef *globalObject, std::string dirname, std::string fullname, JSValueRef *exception, JSObjectRef *exportsObject, std::string mode) {
-     // Create module system
+void DefineGlobal(JSContextRef context, JSObjectRef *globalObject, std::string dirname, std::string fullname, JSValueRef *exception, JSObjectRef *exportsObject, std::string mode)
+{
+    // Create module system
     JSObjectRef moduleObject = JSObjectMake(context, nullptr, nullptr);
     JSStringRef moduleKey = JSStringCreateWithUTF8CString("module");
     JSObjectSetProperty(context, JSContextGetGlobalObject(context), moduleKey, moduleObject, kJSPropertyAttributeNone, nullptr);

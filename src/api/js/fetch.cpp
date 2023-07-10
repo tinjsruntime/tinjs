@@ -3,31 +3,30 @@
 #include <curl/curl.h>
 #include <string>
 
-
 JSValueRef jsonify(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
 {
-        // Get the response object from the function call
-        JSStringRef responseProp = JSStringCreateWithUTF8CString("response");
-        JSValueRef responseValue = JSObjectGetProperty(ctx, thisObject, responseProp, NULL);
-        JSStringRef responseString = JSValueToStringCopy(ctx, responseValue, NULL);
-        size_t responseLength = JSStringGetMaximumUTF8CStringSize(responseString);
-        char response[responseLength];
-        JSStringGetUTF8CString(responseString, response, responseLength);
+    // Get the response object from the function call
+    JSStringRef responseProp = JSStringCreateWithUTF8CString("response");
+    JSValueRef responseValue = JSObjectGetProperty(ctx, thisObject, responseProp, NULL);
+    JSStringRef responseString = JSValueToStringCopy(ctx, responseValue, NULL);
+    size_t responseLength = JSStringGetMaximumUTF8CStringSize(responseString);
+    char response[responseLength];
+    JSStringGetUTF8CString(responseString, response, responseLength);
 
-        // Parse the response as JSON
-        JSStringRef json = JSStringCreateWithUTF8CString(response);
-        JSValueRef jsonValue = JSValueMakeFromJSONString(ctx, json);
-        return jsonValue;
+    // Parse the response as JSON
+    JSStringRef json = JSStringCreateWithUTF8CString(response);
+    JSValueRef jsonValue = JSValueMakeFromJSONString(ctx, json);
+    return jsonValue;
 }
 
-size_t writeCallback(char* contents, size_t size, size_t nmemb, std::string* response)
+size_t writeCallback(char *contents, size_t size, size_t nmemb, std::string *response)
 {
     size_t totalSize = size * nmemb;
     response->append(contents, totalSize);
     return totalSize;
 }
 
-JSValueRef fetchc(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception)
+JSValueRef fetchc(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
 {
     if (argumentCount != 1 || !JSValueIsString(ctx, arguments[0]))
     {
@@ -45,7 +44,7 @@ JSValueRef fetchc(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject
     std::string urlstr = std::string(url);
     // Initialize libcurl
     curl_global_init(CURL_GLOBAL_DEFAULT);
-    CURL* curl = curl_easy_init();
+    CURL *curl = curl_easy_init();
 
     std::cout << "Fetching " << urlstr << std::endl;
     // Set the URL for the fetch request
@@ -72,13 +71,13 @@ JSValueRef fetchc(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject
     curl_global_cleanup();
 
     /*
-    *   Return the response as a object:
-    *   {
-    *      status: (int) status code,
-    *      response: (string) response body,
-    *      json: (function) returns the response as a JSON object (JSON.parse)
-    *  }
-    */
+     *   Return the response as a object:
+     *   {
+     *      status: (int) status code,
+     *      response: (string) response body,
+     *      json: (function) returns the response as a JSON object (JSON.parse)
+     *  }
+     */
     JSObjectRef responseObj = JSObjectMake(ctx, NULL, NULL);
     JSStringRef statusProp = JSStringCreateWithUTF8CString("status");
     JSStringRef responseProp = JSStringCreateWithUTF8CString("response");

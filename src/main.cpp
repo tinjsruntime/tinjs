@@ -4,7 +4,7 @@
 #include "api/js/global.cpp"
 #include <string>
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     if (argc != 3)
     {
@@ -14,7 +14,8 @@ int main(int argc, char* argv[])
 
     auto mode = std::string(argv[1]);
 
-    if (mode != "run" && mode != "test") {
+    if (mode != "run" && mode != "test")
+    {
         std::cerr << "Usage: " << argv[0] << " <(run|test)> <filename>" << std::endl;
         return 1;
     }
@@ -32,9 +33,12 @@ int main(int argc, char* argv[])
 
     std::string fileContents;
 
-    try {
+    try
+    {
         fileContents = readFile(filename);
-    } catch (const std::runtime_error& error) {
+    }
+    catch (const std::runtime_error &error)
+    {
         std::cerr << "Error reading file: " << error.what() << std::endl;
         return 1;
     }

@@ -20,8 +20,7 @@ std::map<std::string, std::string> colors = {
     {"reverse", "\033[7m"},
     {"hidden", "\033[8m"},
     {"bold", "\033[1m"},
-    {"gray", "\033[90m"}
-};
+    {"gray", "\033[90m"}};
 
 JSValueRef describeCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
 {
@@ -170,14 +169,10 @@ JSValueRef toEqualCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef t
         auto valuestr = toString(ctx, value);
 
         std::string out = colors["red"] + colors["bold"] + "Expected: " + colors["reset"] +
-            colors["red"] + againstr + "\n" +
-            colors["yellow"] + colors["bold"] + "Received: " + colors["reset"] + colors["yellow"] + valuestr + colors["reset"];
+                          colors["red"] + againstr + "\n" +
+                          colors["yellow"] + colors["bold"] + "Received: " + colors["reset"] + colors["yellow"] + valuestr + colors["reset"];
 
-        JSObjectSetProperty(ctx, nmeta, message, JSValueMakeString(ctx,
-            JSStringCreateWithUTF8CString(
-                out.c_str()
-            )
-        ), kJSPropertyAttributeNone, nullptr);
+        JSObjectSetProperty(ctx, nmeta, message, JSValueMakeString(ctx, JSStringCreateWithUTF8CString(out.c_str())), kJSPropertyAttributeNone, nullptr);
 
         JSObjectSetProperty(ctx, JSContextGetGlobalObject(ctx), JSStringCreateWithUTF8CString("_meta"), nmeta, kJSPropertyAttributeNone, nullptr);
     }

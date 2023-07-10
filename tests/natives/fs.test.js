@@ -45,7 +45,7 @@ describe('fs', () => {
     test('exists()', () => {
         expect(fs.exists(docPath('tmp/hello_world.txt'))).toEqual(true);
     });
-    
+
     test('rmFile()', () => {
         fs.rmFile(docPath('tmp/hello_world.txt'));
         expect(fs.exists(docPath('tmp/hello_world.txt'))).toEqual(false);

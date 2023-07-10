@@ -9,7 +9,6 @@ std::string _getcwd()
     return std::filesystem::current_path();
 }
 
-
 // /x/smthn/b.js -> /x/smthn
 std::string parent(const std::string &filename)
 {
@@ -20,7 +19,7 @@ std::string parent(const std::string &filename)
 std::string readFile(const std::string &filePath)
 {
     std::ifstream file(filePath);
-    
+
     if (!file.good())
         throw std::runtime_error("File not found");
 
