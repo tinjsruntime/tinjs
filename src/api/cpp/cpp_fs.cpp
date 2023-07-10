@@ -37,6 +37,6 @@ std::string readFile(const std::string &filePath)
 
 std::string absolute(const std::string &relativePath, const std::string &basePath)
 {
-    auto fullPath = std::filesystem::path(basePath + relativePath).lexically_normal();
+    auto fullPath = std::filesystem::path(basePath + "/" + relativePath).lexically_normal();
     return fullPath.string();
 }
