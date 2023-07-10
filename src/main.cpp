@@ -6,6 +6,7 @@
 
 int main(int argc, char *argv[])
 {
+    srand(time(NULL));
     if (argc != 3)
     {
         std::cerr << "Usage: " << argv[0] << " <(run|test)> <filename>" << std::endl;

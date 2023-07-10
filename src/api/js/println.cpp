@@ -31,11 +31,9 @@ void printValue(JSContextRef ctx, JSValueRef value, bool color)
 
 void printArray(JSContextRef ctx, JSObjectRef array, bool color)
 {
+    int length = getArrayLength(ctx, array); 
 
-    JSPropertyNameArrayRef propertyArray = JSObjectCopyPropertyNames(ctx, array);
-    size_t count = JSPropertyNameArrayGetCount(propertyArray);
-
-    if (count == 0)
+    if (length == 0)
     {
         std::cout << "[]";
         return;
@@ -43,12 +41,12 @@ void printArray(JSContextRef ctx, JSObjectRef array, bool color)
 
     std::cout << "[";
 
-    for (size_t i = 0; i < count; i++)
+    for (size_t i = 0; i < length; i++)
     {
         JSValueRef element = JSObjectGetPropertyAtIndex(ctx, array, i, nullptr);
         rawPrint(ctx, element, JSValueGetType(ctx, element), true);
 
-        if (i != count - 1)
+        if (i != length - 1)
         {
             std::cout << ", ";
         }

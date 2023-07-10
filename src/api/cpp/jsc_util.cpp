@@ -9,3 +9,10 @@ std::string toString(JSContextRef ctx, JSValueRef value)
     JSStringRelease(string);
     return std::string(buffer);
 }
+
+int getArrayLength(JSContextRef ctx, JSObjectRef array)
+{
+    JSValueRef count = JSObjectGetProperty(ctx, array, JSStringCreateWithUTF8CString("length"), nullptr);
+    int length = JSValueToNumber(ctx, count, nullptr);
+    return length;
+}

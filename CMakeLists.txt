@@ -14,9 +14,6 @@ INCLUDE_DIRECTORIES(
 
 
 add_executable (tin src/main.cpp)
-target_link_libraries(tin
-  javascriptcoregtk-4.0
-  curl
-)
+target_link_libraries(tin javascriptcoregtk-4.0 curl)
 
 install (TARGETS tin DESTINATION bin)

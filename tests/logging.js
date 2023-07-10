@@ -5,7 +5,6 @@ println(1)
 println("x")
 println(true);
 println(function () { });
-println([])
 println([
     1,
     2,
@@ -30,3 +29,6 @@ class A { }
 
 println(A)
 println(class { });
+
+
+println([])

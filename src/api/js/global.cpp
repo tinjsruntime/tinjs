@@ -6,6 +6,7 @@
 #include "println.cpp"
 #include "require.cpp"
 #include "fetch.cpp"
+#include "prototype/_js_Array.cpp"
 
 void DefineGlobal(JSContextRef context, JSObjectRef *globalObject, std::string dirname, std::string fullname, JSValueRef *exception, JSObjectRef *exportsObject, std::string mode)
 {
@@ -50,4 +51,19 @@ void DefineGlobal(JSContextRef context, JSObjectRef *globalObject, std::string d
     JSStringRef execscope = JSStringCreateWithUTF8CString("__scope");
     JSStringRef scopeString = JSStringCreateWithUTF8CString(mode.c_str());
     JSObjectSetProperty(context, *globalObject, execscope, JSValueMakeString(context, scopeString), kJSPropertyAttributeNone, exception);
+
+    // add .random, .first and .last to array prototype
+    JSStringRef randomName = JSStringCreateWithUTF8CString("random");
+    JSStringRef firstName = JSStringCreateWithUTF8CString("first");
+    JSStringRef lastName = JSStringCreateWithUTF8CString("last");
+
+    JSStringRef arrayName = JSStringCreateWithUTF8CString("Array");
+    JSObjectRef arrayConstructor = (JSObjectRef)JSObjectGetProperty(context, *globalObject, arrayName, exception);
+    JSStringRelease(arrayName);
+
+    JSObjectRef arrayPrototype = (JSObjectRef)JSObjectGetProperty(context, arrayConstructor, JSStringCreateWithUTF8CString("prototype"), exception);
+
+    JSObjectSetProperty(context, arrayPrototype, randomName, JSObjectMakeFunctionWithCallback(context, randomName, random), kJSPropertyAttributeNone, exception);
+    JSObjectSetProperty(context, arrayPrototype, firstName, JSObjectMakeFunctionWithCallback(context, firstName, first), kJSPropertyAttributeNone, exception);
+    JSObjectSetProperty(context, arrayPrototype, lastName, JSObjectMakeFunctionWithCallback(context, lastName, last), kJSPropertyAttributeNone, exception);
 }
