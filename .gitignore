@@ -4,3 +4,4 @@ tin
 /bin
 !/bin/.gitkeep
 disallowed.pkgs
+cmake-build-debug
