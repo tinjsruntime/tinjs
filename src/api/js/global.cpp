@@ -9,6 +9,8 @@
 #include "prototype/_js_Array.cpp"
 
 namespace global {
+    std::string _maindir = "none";
+
     void define(JSContextRef context, JSObjectRef *globalObject, std::string dirname, std::string fullname,
                 JSValueRef *exception, JSObjectRef *exportsObject, std::string mode) {
         // Create module system
@@ -58,6 +60,18 @@ namespace global {
         auto execscope = JSStringCreateWithUTF8CString("__scope");
         auto scopeString = JSStringCreateWithUTF8CString(mode.c_str());
         JSObjectSetProperty(context, *globalObject, execscope, JSValueMakeString(context, scopeString),
+                            kJSPropertyAttributeNone, exception);
+
+        auto maindir = JSStringCreateWithUTF8CString("__maindir");
+        std::string maindirString = dirname;
+
+        if (_maindir == "none") {
+            _maindir = dirname;
+        } else {
+            maindirString = _maindir;
+        }
+
+        JSObjectSetProperty(context, *globalObject, maindir, JSValueMakeString(context, JSStringCreateWithUTF8CString(maindirString.c_str())),
                             kJSPropertyAttributeNone, exception);
 
         // add .random, .first and .last to array prototype

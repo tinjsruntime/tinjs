@@ -11,29 +11,29 @@ namespace testMod {
     JSValueRef describeCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                                 const JSValueRef arguments[], JSValueRef *exception) {
         if (argumentCount != 2) {
-            JSStringRef error = JSStringCreateWithUTF8CString("describe requires 2 arguments");
+            auto error = JSStringCreateWithUTF8CString("describe requires 2 arguments");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
             return JSValueMakeUndefined(ctx);
         }
 
         if (!JSValueIsString(ctx, arguments[0])) {
-            JSStringRef error = JSStringCreateWithUTF8CString("describe requires a string argument");
+            auto error = JSStringCreateWithUTF8CString("describe requires a string argument");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
             return JSValueMakeUndefined(ctx);
         }
 
         if (!JSValueIsObject(ctx, arguments[1])) {
-            JSStringRef error = JSStringCreateWithUTF8CString("describe requires a function argument");
+            auto error = JSStringCreateWithUTF8CString("describe requires a function argument");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
             return JSValueMakeUndefined(ctx);
         }
 
-        JSObjectRef func = JSValueToObject(ctx, arguments[1], exception);
+        auto func = JSValueToObject(ctx, arguments[1], exception);
 
-        JSStringRef group = JSStringCreateWithUTF8CString("_group");
+        auto group = JSStringCreateWithUTF8CString("_group");
         JSObjectSetProperty(ctx, thisObject, group, arguments[0], kJSPropertyAttributeNone, exception);
         JSStringRelease(group);
 
@@ -44,59 +44,59 @@ namespace testMod {
 
     JSValueRef testCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                             const JSValueRef arguments[], JSValueRef *exception) {
-        JSStringRef group = JSStringCreateWithUTF8CString("_group");
-        JSValueRef groupValue = JSObjectGetProperty(ctx, thisObject, group, exception);
+        auto group = JSStringCreateWithUTF8CString("_group");
+        auto groupValue = JSObjectGetProperty(ctx, thisObject, group, exception);
         JSStringRelease(group);
 
         auto grpstr = toString(ctx, groupValue);
 
         if (argumentCount != 2) {
-            JSStringRef error = JSStringCreateWithUTF8CString("describe requires 2 arguments");
+            auto error = JSStringCreateWithUTF8CString("describe requires 2 arguments");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
             return JSValueMakeUndefined(ctx);
         }
 
         if (!JSValueIsString(ctx, arguments[0])) {
-            JSStringRef error = JSStringCreateWithUTF8CString("describe requires a string argument");
+            auto error = JSStringCreateWithUTF8CString("describe requires a string argument");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
             return JSValueMakeUndefined(ctx);
         }
 
         if (!JSValueIsObject(ctx, arguments[1])) {
-            JSStringRef error = JSStringCreateWithUTF8CString("describe requires a function argument");
+            auto error = JSStringCreateWithUTF8CString("describe requires a function argument");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
             return JSValueMakeUndefined(ctx);
         }
 
-        JSObjectRef func = JSValueToObject(ctx, arguments[1], exception);
+        auto func = JSValueToObject(ctx, arguments[1], exception);
 
-        JSObjectRef meta = JSObjectMake(ctx, NULL, NULL);
-        JSStringRef error = JSStringCreateWithUTF8CString("error");
-        JSStringRef message = JSStringCreateWithUTF8CString("message");
+        auto meta = JSObjectMake(ctx, NULL, NULL);
+        auto error = JSStringCreateWithUTF8CString("error");
+        auto message = JSStringCreateWithUTF8CString("message");
         JSObjectSetProperty(ctx, meta, error, JSValueMakeBoolean(ctx, false), kJSPropertyAttributeNone, exception);
         JSObjectSetProperty(ctx, meta, message, JSValueMakeString(ctx, JSStringCreateWithUTF8CString("")),
                             kJSPropertyAttributeNone, exception);
 
-        JSStringRef _meta = JSStringCreateWithUTF8CString("_meta");
+        auto _meta = JSStringCreateWithUTF8CString("_meta");
         JSObjectSetProperty(ctx, thisObject, _meta, meta, kJSPropertyAttributeNone, exception);
 
         JSObjectCallAsFunction(ctx, func, thisObject, 0, NULL, exception);
 
-        JSObjectRef newMeta = JSValueToObject(ctx, JSObjectGetProperty(ctx, thisObject, _meta, exception), exception);
+        auto newMeta = JSValueToObject(ctx, JSObjectGetProperty(ctx, thisObject, _meta, exception), exception);
         JSStringRelease(_meta);
 
-        JSStringRef errorString = JSStringCreateWithUTF8CString("error");
-        JSValueRef errorValue = JSObjectGetProperty(ctx, newMeta, errorString, exception);
+        auto errorString = JSStringCreateWithUTF8CString("error");
+        auto errorValue = JSObjectGetProperty(ctx, newMeta, errorString, exception);
         JSStringRelease(errorString);
 
         auto againstr = toString(ctx, arguments[0]);
 
         if (JSValueToBoolean(ctx, errorValue)) {
-            JSStringRef message_String = JSStringCreateWithUTF8CString("message");
-            JSValueRef messageValue = JSObjectGetProperty(ctx, newMeta, message_String, exception);
+            auto message_String = JSStringCreateWithUTF8CString("message");
+            auto messageValue = JSObjectGetProperty(ctx, newMeta, message_String, exception);
             JSStringRelease(message_String);
 
             auto messageString = toString(ctx, messageValue);
@@ -114,12 +114,12 @@ namespace testMod {
 
     JSValueRef toEqualCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                                const JSValueRef arguments[], JSValueRef *exception) {
-        JSStringRef _meta = JSStringCreateWithUTF8CString("_meta");
-        JSObjectRef meta = JSValueToObject(ctx, JSObjectGetProperty(ctx, thisObject, _meta, nullptr), nullptr);
+        auto _meta = JSStringCreateWithUTF8CString("_meta");
+        auto meta = JSValueToObject(ctx, JSObjectGetProperty(ctx, thisObject, _meta, nullptr), nullptr);
         JSStringRelease(_meta);
 
-        JSStringRef error = JSStringCreateWithUTF8CString("error");
-        JSValueRef errorValue = JSObjectGetProperty(ctx, meta, error, nullptr);
+        auto error = JSStringCreateWithUTF8CString("error");
+        auto errorValue = JSObjectGetProperty(ctx, meta, error, nullptr);
         JSStringRelease(error);
 
         if (JSValueToBoolean(ctx, errorValue)) {
@@ -127,21 +127,21 @@ namespace testMod {
         }
 
         if (argumentCount != 1) {
-            JSStringRef __error = JSStringCreateWithUTF8CString("toEqual requires 1 argument");
+            auto __error = JSStringCreateWithUTF8CString("toEqual requires 1 argument");
             *exception = JSValueMakeString(ctx, __error);
             JSStringRelease(__error);
             return JSValueMakeUndefined(ctx);
         }
 
-        JSValueRef arg = arguments[0];
-        JSValueRef value = JSObjectGetProperty(ctx, thisObject, JSStringCreateWithUTF8CString("_value"), nullptr);
+        auto arg = arguments[0];
+        auto value = JSObjectGetProperty(ctx, thisObject, JSStringCreateWithUTF8CString("_value"), nullptr);
 
         bool ret = JSValueIsEqual(ctx, arg, value, nullptr);
 
         if (!ret) {
-            JSObjectRef nmeta = JSObjectMake(ctx, NULL, NULL);
-            JSStringRef error = JSStringCreateWithUTF8CString("error");
-            JSStringRef message = JSStringCreateWithUTF8CString("message");
+            auto nmeta = JSObjectMake(ctx, NULL, NULL);
+            auto error = JSStringCreateWithUTF8CString("error");
+            auto message = JSStringCreateWithUTF8CString("message");
             JSObjectSetProperty(ctx, nmeta, error, JSValueMakeBoolean(ctx, true), kJSPropertyAttributeNone, nullptr);
 
             auto againstr = toString(ctx, arguments[0]);
@@ -165,20 +165,20 @@ namespace testMod {
     JSValueRef expectCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                               const JSValueRef arguments[], JSValueRef *exception) {
         if (argumentCount != 1) {
-            JSStringRef error = JSStringCreateWithUTF8CString("expect requires 1 argument");
+            auto error = JSStringCreateWithUTF8CString("expect requires 1 argument");
             *exception = JSValueMakeString(ctx, error);
             JSStringRelease(error);
             return JSValueMakeUndefined(ctx);
         }
 
-        JSValueRef arg = arguments[0];
+        auto arg = arguments[0];
 
-        JSObjectRef obj = JSObjectMake(ctx, NULL, NULL);
+        auto obj = JSObjectMake(ctx, NULL, NULL);
 
-        JSStringRef value = JSStringCreateWithUTF8CString("_value");
+        auto value = JSStringCreateWithUTF8CString("_value");
         JSObjectSetProperty(ctx, obj, value, arg, kJSPropertyAttributeNone, NULL);
 
-        JSStringRef toEqual = JSStringCreateWithUTF8CString("toEqual");
+        auto toEqual = JSStringCreateWithUTF8CString("toEqual");
         JSObjectSetProperty(ctx, obj, toEqual, JSObjectMakeFunctionWithCallback(ctx, toEqual, toEqualCallback),
                             kJSPropertyAttributeNone, NULL);
 

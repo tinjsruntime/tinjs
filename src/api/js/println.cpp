@@ -23,7 +23,7 @@ namespace println {
         std::cout << "[";
 
         for (size_t i = 0; i < length; i++) {
-            JSValueRef element = JSObjectGetPropertyAtIndex(ctx, array, i, nullptr);
+            auto element = JSObjectGetPropertyAtIndex(ctx, array, i, nullptr);
             rawPrint(ctx, element, JSValueGetType(ctx, element), true);
 
             if (i != length - 1) {
@@ -36,7 +36,7 @@ namespace println {
 
     void printObject(JSContextRef ctx, JSObjectRef object, bool color) {
 
-        JSPropertyNameArrayRef propertyArray = JSObjectCopyPropertyNames(ctx, object);
+        auto propertyArray = JSObjectCopyPropertyNames(ctx, object);
         size_t count = JSPropertyNameArrayGetCount(propertyArray);
 
         if (count == 0) {
@@ -47,8 +47,8 @@ namespace println {
         std::cout << "{ ";
 
         for (size_t i = 0; i < count; i++) {
-            JSStringRef propertyName = JSPropertyNameArrayGetNameAtIndex(propertyArray, i);
-            JSValueRef propertyValue = JSObjectGetProperty(ctx, object, propertyName, nullptr);
+            auto propertyName = JSPropertyNameArrayGetNameAtIndex(propertyArray, i);
+            auto propertyValue = JSObjectGetProperty(ctx, object, propertyName, nullptr);
 
             auto str = toString(ctx, JSValueMakeString(ctx, propertyName));
 
@@ -71,8 +71,8 @@ namespace println {
     JSValueRef printlnCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                                const JSValueRef arguments[], JSValueRef *exception) {
         for (size_t i = 0; i < argumentCount; i++) {
-            JSValueRef argument = arguments[i];
-            JSType type = JSValueGetType(ctx, argument);
+            auto argument = arguments[i];
+            auto type = JSValueGetType(ctx, argument);
 
             rawPrint(ctx, argument, type, false);
             std::cout << " ";

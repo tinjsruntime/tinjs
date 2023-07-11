@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
         fileContents = readFile(filename);
     } catch (const std::runtime_error &error) {
         std::cerr << "Error reading file: " << error.what() << std::endl;
-
+        
         return 1;
     }
 
