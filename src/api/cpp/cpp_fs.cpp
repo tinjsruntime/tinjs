@@ -16,7 +16,6 @@ namespace cppFs {
 
     // https://github.com/SenkoraJS/senkora/main/src/api/Senkora.cpp#L63C1-L79C1
     std::string readFile(const std::string &filePath) {
-        std::cout << "Reading file: " << filePath << std::endl;
         std::ifstream file(filePath);
 
         if (!file.good())

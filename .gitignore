@@ -3,3 +3,4 @@ tin
 /build
 /bin
 !/bin/.gitkeep
+disallowed.pkgs

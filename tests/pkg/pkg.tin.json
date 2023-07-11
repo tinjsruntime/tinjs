@@ -2,7 +2,7 @@
     "is-odd": {
         "main": "pkg/is-odd/index.js",
         "deps": {
-                "is-even": "[ANY]"
+            "is-even": "[ANY]"
         }
     },
     "is-even": {

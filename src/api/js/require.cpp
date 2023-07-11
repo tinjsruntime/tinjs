@@ -97,10 +97,11 @@ namespace require
         auto dirnameString = toString(ctx, dirnameValue);
 
         std::string finalPath;
+        std::string packageName = "none";
 
         if (path[0] == '@')
         {
-            auto packageName = path.substr(1);
+            packageName = path.substr(1);
             auto packageJson = getPackageJson(__maindir, ctx, exception);
             auto _pkg = packageJson[packageName];
 
@@ -118,7 +119,6 @@ namespace require
 
             if (_pkg["deps"] != Json::nullValue)
             {
-                std::cout << "requiring deps" << std::endl;
                 /**
                  * deps is:
                  *  {
@@ -128,19 +128,11 @@ namespace require
 
                 for (const auto &dep : _pkg["deps"].getMemberNames())
                 {
-
-                    std::cout << "Key: " << dep << std::endl;
                     auto depPath = "@" + std::string(dep.c_str());
 
-                    std::cout << "requiring dep: " << depPath << std::endl;
                     // args
                     JSValueRef args[] = { JSValueMakeString(ctx, JSStringCreateWithUTF8CString(depPath.c_str())) };
-                    auto depValue = requireCallback(ctx, function, thisObject, 1, args, exception);
-
-                    if (JSValueIsUndefined(ctx, depValue))
-                    {
-                        return JSValueMakeUndefined(ctx);
-                    }
+                    requireCallback(ctx, function, thisObject, 1, args, exception);
                 }
             }
 
@@ -230,6 +222,7 @@ namespace require
         JSStringRelease(exportsKey);
 
         moduleCache[finalPath] = exportsValue;
+        if (packageName != "none") moduleCache[packageName] = exportsValue;
         return exportsValue;
     }
 }
