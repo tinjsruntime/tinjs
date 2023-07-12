@@ -88,6 +88,7 @@ int main(int argc, char *argv[])
 
         std::cout << "Interactive REPL for tin.js" << std::endl;
         std::cout << "Made with love by tin.js contributors <3" << std::endl;
+        std::cout << "Type 'exit' to exit" << std::endl;
         while (running)
         {
             std::cout << "> ";
@@ -119,7 +120,8 @@ int main(int argc, char *argv[])
             }
             else
             {
-                std::cout << toString(context, value) << std::endl;
+                print::rawPrint(context, value, JSValueGetType(context, value), true);
+                std::cout << std::endl;
             }
         }
 
