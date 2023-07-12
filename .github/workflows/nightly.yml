@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install packages
-      run: sudo apt update && sudo apt install g++ curl libjavascriptcoregtk-4.0-dev libcurl4-openssl-dev libglib2.0-dev libjsoncpp-dev libjsoncpp25
+      run: sudo apt update && sudo apt install g++ curl libjavascriptcoregtk-4.0-dev libcurl4-openssl-dev libglib2.0-dev libjsoncpp-dev libjsoncpp25 openssl libssl-dev
     - name: Set library path
       run: export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu
     - name: Compile
