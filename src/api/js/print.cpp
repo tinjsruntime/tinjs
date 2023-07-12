@@ -2,7 +2,7 @@
 #include <map>
 #include <JavaScriptCore/JavaScript.h>
 #include "print.hpp"
-#include "../cpp/jsc_util.cpp"
+#include "../cpp/jsc_util.hpp"
 
 using namespace jscUtil;
 namespace print
@@ -108,26 +108,26 @@ namespace print
         switch (type)
         {
         case kJSTypeUndefined:
-            std::cout << colors["gray"] << "undefined" << colors["reset"];
+            std::cout << getColor("gray") << "undefined" << getColor("reset");
             break;
 
         case kJSTypeNull:
-            std::cout << colors["gray"] << "null" << colors["gray"];
+            std::cout << getColor("gray") << "null" << getColor("gray");
             break;
 
         case kJSTypeBoolean:
-            std::cout << colors["yellow"] << (JSValueToBoolean(ctx, argument) ? "true" : "false")
-                      << colors["reset"];
+            std::cout << getColor("yellow") << (JSValueToBoolean(ctx, argument) ? "true" : "false")
+                      << getColor("reset");
             break;
 
         case kJSTypeNumber:
-            std::cout << colors["yellow"] << JSValueToNumber(ctx, argument, nullptr) << colors["reset"];
+            std::cout << getColor("yellow") << JSValueToNumber(ctx, argument, nullptr) << getColor("reset");
             break;
 
         case kJSTypeString:
             if (colorString == true)
             {
-                std::cout << colors["green"] << '"' << toString(ctx, argument) << '"' << colors["reset"];
+                std::cout << getColor("green") << '"' << toString(ctx, argument) << '"' << getColor("reset");
             }
             else
             {
@@ -151,11 +151,11 @@ namespace print
                     std::string trimmedClassName = className.substr(0, className.find(" "));
                     bool isEmpty = trimmedClassName == "";
                     std::string finalClass = "[Class" + (isEmpty ? "]" : " " + trimmedClassName + "]");
-                    std::cout << colors["cyan"] << finalClass << colors["reset"];
+                    std::cout << getColor("cyan") << finalClass << getColor("reset");
                 }
                 else
                 {
-                    std::cout << colors["magenta"] << "[Function]" << colors["reset"];
+                    std::cout << getColor("magenta") << "[Function]" << getColor("reset");
                 }
             }
             else

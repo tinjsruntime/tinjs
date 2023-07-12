@@ -54,7 +54,7 @@ namespace httpMod
                             JSObjectMakeFunctionWithCallback(ctx, JSStringCreateWithUTF8CString("delete"),
                                                              deleteCallback),
                             kJSPropertyAttributeNone, NULL);
-                            
+
         JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("listen"),
                             JSObjectMakeFunctionWithCallback(ctx, JSStringCreateWithUTF8CString("listen"),
                                                              listenCallback),

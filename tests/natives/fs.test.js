@@ -21,33 +21,35 @@ function docPath(val) {
 
 describe('fs', () => {
     const testString = 'Hello, World!';
+    const tmpHW = docPath('tmp/hello_world.txt');
+    
     test('readFile()', () => {
         const content = fs.readFile(docPath('hello_world.txt'));
         expect(content).toEqual('Hello, World! xD');
     });
 
     test('writeFile()', () => {
-        fs.writeFile(docPath('tmp/hello_world.txt'), testString);
-        expect(fs.readFile(docPath('tmp/hello_world.txt'))).toEqual(testString);
+        fs.writeFile(tmpHW, testString);
+        expect(fs.readFile(tmpHW)).toEqual(testString);
     });
 
     test('writeFile() - File already exists', () => {
-        fs.writeFile(docPath('tmp/hello_world.txt'), testString + "X");
-        expect(fs.readFile(docPath('tmp/hello_world.txt'))).toEqual(testString + "X");
-        fs.writeFile(docPath('tmp/hello_world.txt'), testString);
+        fs.writeFile(tmpHW, testString + "X");
+        expect(fs.readFile(tmpHW)).toEqual(testString + "X");
+        fs.writeFile(tmpHW, testString);
     });
 
     test('appendFile()', () => {
-        fs.appendFile(docPath('tmp/hello_world.txt'), "\n" + testString);
-        expect(fs.readFile(docPath('tmp/hello_world.txt'))).toEqual(testString + "\n" + testString);
+        fs.appendFile(tmpHW, "\n" + testString);
+        expect(fs.readFile(tmpHW)).toEqual(testString + "\n" + testString);
     });
 
     test('exists()', () => {
-        expect(fs.exists(docPath('tmp/hello_world.txt'))).toEqual(true);
+        expect(fs.exists(tmpHW)).toEqual(true);
     });
 
-    test('rmFile()', () => {
-        fs.rmFile(docPath('tmp/hello_world.txt'));
-        expect(fs.exists(docPath('tmp/hello_world.txt'))).toEqual(false);
+    test('rmFile() - Cleanup ' + tmpHW, () => {
+        fs.rmFile(tmpHW);
+        expect(fs.exists(tmpHW)).toEqual(false);
     });
 })
