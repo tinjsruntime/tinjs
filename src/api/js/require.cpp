@@ -6,6 +6,7 @@
 #include "../cpp/jsc_util.hpp"
 #include "module/test.cpp"
 #include "module/fs.cpp"
+#include "module/http.cpp"
 
 namespace require
 {
@@ -172,6 +173,11 @@ namespace require
 
                 auto testObject = JSObjectMake(ctx, nullptr, nullptr);
                 return testMod::init_test_module(ctx, &testObject);
+            }
+            else if (moduleName == "http")
+            {
+                auto httpObject = JSObjectMake(ctx, nullptr, nullptr);
+                return httpMod::init_http_module(ctx, &httpObject);
             }
             else
             {

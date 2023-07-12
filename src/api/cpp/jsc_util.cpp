@@ -10,6 +10,15 @@ namespace jscUtil {
         return std::string(buffer);
     }
 
+    std::string jsonAsStr (JSContextRef ctx, JSValueRef value) {
+        auto string = JSValueCreateJSONString(ctx, value, 0, nullptr);
+        auto length = JSStringGetMaximumUTF8CStringSize(string);
+        char buffer[length];
+        JSStringGetUTF8CString(string, buffer, length);
+        JSStringRelease(string);
+        return std::string(buffer);
+    }
+    
     int getArrayLength(JSContextRef ctx, JSObjectRef array) {
         auto count = JSObjectGetProperty(ctx, array, JSStringCreateWithUTF8CString("length"), nullptr);
         int length = JSValueToNumber(ctx, count, nullptr);

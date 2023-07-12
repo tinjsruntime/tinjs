@@ -8,6 +8,8 @@ SET (tin_VERSION_MINOR 0)
 FIND_PACKAGE(PkgConfig REQUIRED)
 PKG_CHECK_MODULES(JAVASCRIPTCORE_LIBRARY REQUIRED javascriptcoregtk-4.0)
 PKG_CHECK_MODULES(JSONCPP REQUIRED jsoncpp)
+PKG_CHECK_MODULES(CURL REQUIRED libcurl)
+PKG_CHECK_MODULES(OPENSSL REQUIRED openssl)
 
 INCLUDE_DIRECTORIES(
   "/usr/include/webkitgtk-4.0",
@@ -15,6 +17,6 @@ INCLUDE_DIRECTORIES(
 )
 
 add_executable (tin src/main.cpp)
-target_link_libraries(tin javascriptcoregtk-4.0 curl jsoncpp)
+target_link_libraries(tin javascriptcoregtk-4.0 curl jsoncpp ${OPENSSL_LIBRARIES})
 
 install (TARGETS tin DESTINATION bin)
