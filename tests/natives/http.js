@@ -20,4 +20,17 @@ server.get('/html', (req) => {
     return { content: '<h1>Hello World from TIN! sent by client</h1>', type: 'html' };
 });
 
+// test put, delete and patch
+server.put('/put', (req) => {
+    return { content: { message: 'PUT' }, type: 'json' };
+});
+
+server.delete('/delete', (req) => {
+    return { content: { message: 'DELETE' }, type: 'json' };
+});
+
+server.patch('/patch', (req) => {
+    return { content: { message: 'PATCH' }, type: 'json' };
+});
+
 server.listen(port);

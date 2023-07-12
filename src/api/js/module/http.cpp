@@ -40,6 +40,21 @@ namespace httpMod
                                                              postCallback),
                             kJSPropertyAttributeNone, NULL);
 
+        JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("put"),
+                            JSObjectMakeFunctionWithCallback(ctx, JSStringCreateWithUTF8CString("put"),
+                                                             putCallback),
+                            kJSPropertyAttributeNone, NULL);
+
+        JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("patch"),
+                            JSObjectMakeFunctionWithCallback(ctx, JSStringCreateWithUTF8CString("patch"),
+                                                             patchCallback),
+                            kJSPropertyAttributeNone, NULL);
+
+        JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("delete"),
+                            JSObjectMakeFunctionWithCallback(ctx, JSStringCreateWithUTF8CString("delete"),
+                                                             deleteCallback),
+                            kJSPropertyAttributeNone, NULL);
+                            
         JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("listen"),
                             JSObjectMakeFunctionWithCallback(ctx, JSStringCreateWithUTF8CString("listen"),
                                                              listenCallback),
@@ -48,9 +63,30 @@ namespace httpMod
         return obj;
     }
 
-    JSValueRef get_postCallback(JSContextRef ctx, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception, int pOrC)
+    JSValueRef anyCallback(JSContextRef ctx, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception, int pOrC)
     {
-        std::string proc = pOrC == 0 ? "get" : "post";
+        std::string proc;
+
+        switch (pOrC)
+        {
+        case 0:
+            proc = "get";
+            break;
+        case 1:
+            proc = "post";
+            break;
+        case 2:
+            proc = "put";
+            break;
+        case 3:
+            proc = "patch";
+            break;
+        case 4:
+            proc = "delete";
+            break;
+        default:
+            throw std::runtime_error("Invalid pOrC value");
+        }
 
         if (argumentCount != 2)
         {
@@ -79,10 +115,26 @@ namespace httpMod
         auto eventFunction = JSValueToObject(ctx, arguments[1], exception);
         auto c = [&](const std::string &pattern, httplib::Server::Handler handler)
         {
-            if (pOrC == 0)
+            switch (pOrC)
+            {
+            case 0:
                 svr.Get(pattern, handler);
-            else
+                break;
+            case 1:
                 svr.Post(pattern, handler);
+                break;
+            case 2:
+                svr.Put(pattern, handler);
+                break;
+            case 3:
+                svr.Patch(pattern, handler);
+                break;
+            case 4:
+                svr.Delete(pattern, handler);
+                break;
+            default:
+                throw std::runtime_error("Invalid pOrC value (#2)");
+            }
         };
 
         c(toString(ctx, arguments[0]), [ctx, eventFunction](const httplib::Request &req, httplib::Response &res)
@@ -139,12 +191,27 @@ namespace httpMod
 
     JSValueRef getCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
     {
-        return get_postCallback(ctx, argumentCount, arguments, exception, 0);
+        return anyCallback(ctx, argumentCount, arguments, exception, 0);
     }
 
     JSValueRef postCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
     {
-        return get_postCallback(ctx, argumentCount, arguments, exception, 1);
+        return anyCallback(ctx, argumentCount, arguments, exception, 1);
+    }
+
+    JSValueRef putCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
+    {
+        return anyCallback(ctx, argumentCount, arguments, exception, 2);
+    }
+
+    JSValueRef patchCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
+    {
+        return anyCallback(ctx, argumentCount, arguments, exception, 3);
+    }
+
+    JSValueRef deleteCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
+    {
+        return anyCallback(ctx, argumentCount, arguments, exception, 4);
     }
 
     JSValueRef listenCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
