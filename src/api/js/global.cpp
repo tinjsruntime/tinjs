@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 #include <unistd.h>
-#include "println.cpp"
+#include "print.cpp"
 #include "require.cpp"
 #include "fetch.cpp"
 #include "prototype/_js_Array.cpp"
@@ -24,9 +24,14 @@ namespace global {
         JSObjectSetProperty(context, moduleObject, exportsKey, *exportsObject, kJSPropertyAttributeNone, nullptr);
         JSStringRelease(exportsKey);
 
+        auto print = JSStringCreateWithUTF8CString("print");
+        JSObjectSetProperty(context, *globalObject, print,
+                            JSObjectMakeFunctionWithCallback(context, nullptr, print::printCallback),
+                            kJSPropertyAttributeNone, exception);
+
         auto println = JSStringCreateWithUTF8CString("println");
         JSObjectSetProperty(context, *globalObject, println,
-                            JSObjectMakeFunctionWithCallback(context, nullptr, println::printlnCallback),
+                            JSObjectMakeFunctionWithCallback(context, nullptr, print::printlnCallback),
                             kJSPropertyAttributeNone, exception);
         JSStringRelease(println);
 

@@ -1,7 +1,10 @@
 #include <JavaScriptCore/JavaScript.h>
 
-namespace println {
+namespace print {
     JSValueRef printlnCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
+                               const JSValueRef arguments[], JSValueRef *exception);
+
+    JSValueRef printCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                                const JSValueRef arguments[], JSValueRef *exception);
 
     void printObject(JSContextRef ctx, JSObjectRef object, bool color);
