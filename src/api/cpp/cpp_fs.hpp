@@ -8,4 +8,6 @@ namespace cppFs {
     std::string absolute(const std::string &relativePath, const std::string &basePath);
 
     std::string parent(const std::string &path);
+
+    bool exists(const std::string &path);
 }

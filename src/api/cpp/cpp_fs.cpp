@@ -36,4 +36,8 @@ namespace cppFs {
         auto fullPath = std::filesystem::path(basePath + "/" + relativePath).lexically_normal();
         return fullPath.string();
     }
+
+    bool exists(const std::string &path) {
+        return std::filesystem::exists(path);
+    }
 }

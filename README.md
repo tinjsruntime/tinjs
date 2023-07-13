@@ -2,4 +2,8 @@
 
 ### Made in JavaScriptCore & C++ for fun :D
 
+<br>
+
+### For Typescript Support download swc executable at [swc's repo](https://github.com/swc-project/swc) and link it in --ts argument
+
 <footer><sub>Heaviliy inspired by <a href="https://github.com/SenkoraJS/senkora">Senkora</a></sub></footer>

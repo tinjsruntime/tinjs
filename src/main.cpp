@@ -2,6 +2,7 @@
 #include <JavaScriptCore/JavaScript.h>
 #include "api/cpp/cpp_fs.cpp"
 #include "api/js/global.cpp"
+#include "api/ext/swc.cpp"
 #include <string>
 
 using namespace cppFs;
@@ -10,7 +11,7 @@ int main(int argc, char *argv[])
 {
     srand(time(NULL));
 
-    if (argc != 3 && argc != 1)
+    if (argc < 3 && argc != 1)
     {
         std::cerr << "Usage: " << argv[0] << " <(run|test)> <filename>" << std::endl;
         return 1;
@@ -48,18 +49,53 @@ int main(int argc, char *argv[])
 
     auto argv2str = JSStringCreateWithUTF8CString(argv[2]);
 
+    std::string tsPath = "";
+
     if (argc > 1)
     {
+
+        if (argc > 3)
+        {
+            std::string arg = argv[3];
+
+            if (arg.substr(0, 5) == "--ts=")
+            {
+                tsPath = arg.substr(5);
+            }
+        }
+
+        if (tsPath == "" && filename.substr(filename.length() - 3) == ".ts")
+        {
+            std::cout << "Warning: " << filename << " is a typescript file, but no typescript compiler was specified. "
+                      << "This may cause errors." << std::endl;
+        }
+
         std::string fileContents;
 
         try
         {
-            fileContents = readFile(filename);
+            if (!exists(filename)) {
+                std::cerr << "Error: File not found at " << filename << std::endl;
+                return 1;
+            }
+
+            if (tsPath != "")
+            {
+                if (!exists(tsPath)) {
+                    std::cerr << "Error: Typescript compiler not found at " << tsPath << std::endl;
+                    return 1;
+                }
+
+                fileContents = swc::transpile(tsPath, filename);
+            }
+            else
+            {
+                fileContents = readFile(filename);
+            }
         }
         catch (const std::runtime_error &error)
         {
             std::cerr << "Error reading file: " << error.what() << std::endl;
-
             return 1;
         }
 
