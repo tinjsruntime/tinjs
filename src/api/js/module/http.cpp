@@ -169,15 +169,13 @@ namespace httpMod
             auto typeStr = toString(ctx, type);
             auto contentStr = toString(ctx, content);
 
-            if (typeStr == "plain") {
-                res.set_content(contentStr, "text/plain");
+            if (typeStr == "plain" || typeStr == "html") {
+                res.set_content(contentStr, "text/" + typeStr);
             } else if (typeStr == "json") {
                 auto _json = jsonAsStr(ctx, content);
                 res.set_content(_json, "application/json");
-            } else if (typeStr == "html") {
-                res.set_content(contentStr, "text/html");
             } else {
-                res.set_content("404, Server sent unknown type", "text/plain");
+                res.set_content(contentStr, typeStr);
             } });
 
         return JSValueMakeUndefined(ctx);

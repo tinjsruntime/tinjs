@@ -7,7 +7,8 @@
 #include "module/test.cpp"
 #include "module/fs.cpp"
 #include "module/http.cpp"
-#include "../ext/swc.hpp"
+#include "../ext/swc.cpp"
+
 namespace require
 {
     std::map<std::string, Json::Value> pkgCache;

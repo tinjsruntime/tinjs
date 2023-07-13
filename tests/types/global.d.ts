@@ -19,6 +19,28 @@ declare global {
         test: (name: string, fn: () => void) => void;
     }
 
+    type serverOn = (path: string, fn: (req: {
+        method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
+        body: string,
+        params: Record<string, string>,
+        version: string,
+        path: string
+    }) => {
+        content: any,
+        type: 'json' | 'text' | 'html' | string,
+    }) => void;
+
+    function require(id: 'tin:http'): {
+        createServer: () => {
+            listen: (port: number) => void;
+            get: serverOn;
+            post: serverOn;
+            put: serverOn;
+            delete: serverOn;
+            patch: serverOn;
+        }
+    }
+
     function fetch(url: string, options?: {
         method?: 'GET' | 'POST',
         body?: string,

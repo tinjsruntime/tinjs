@@ -5,10 +5,10 @@ namespace swc
 {
     std::string tsPath = "";
 
-    std::string initTs(std::string path)
+    void initTs(std::string path)
     {
         tsPath = path;
-        return tsPath;
+        return;
     }
 
     std::string runcmdandreturnout(std::string cmd)
