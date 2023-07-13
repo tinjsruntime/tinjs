@@ -2,7 +2,7 @@
 #include <JavaScriptCore/JavaScript.h>
 #include "api/cpp/cpp_fs.cpp"
 #include "api/js/global.cpp"
-#include "api/ext/swc.cpp"
+#include "api/ext/swc.hpp"
 #include <string>
 
 using namespace cppFs;
@@ -62,6 +62,8 @@ int main(int argc, char *argv[])
             {
                 tsPath = arg.substr(5);
             }
+
+            swc::initTs(tsPath);
         }
 
         if (tsPath == "" && filename.substr(filename.length() - 3) == ".ts")
@@ -86,7 +88,7 @@ int main(int argc, char *argv[])
                     return 1;
                 }
 
-                fileContents = swc::transpile(tsPath, filename);
+                fileContents = swc::transpile(filename);
             }
             else
             {

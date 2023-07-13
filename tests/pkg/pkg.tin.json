@@ -1,11 +1,11 @@
 {
     "is-odd": {
-        "main": "pkg/is-odd/index.js",
+        "main": "pkg/is-odd/index.ts",
         "deps": {
             "is-even": "[ANY]"
         }
     },
     "is-even": {
-        "main": "pkg/is-even/index.js"
+        "main": "pkg/is-even/index.ts"
     }
 }

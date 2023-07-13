@@ -21,7 +21,7 @@ println([
         d: {},
         e: function () {
         },
-        c: [
+        _: [
             1,
         ]
     },
@@ -29,6 +29,8 @@ println([
 ])
 
 class A {
+    constructor() {
+    }
 }
 
 println(A)

@@ -7,7 +7,7 @@
 #include "module/test.cpp"
 #include "module/fs.cpp"
 #include "module/http.cpp"
-
+#include "../ext/swc.hpp"
 namespace require
 {
     std::map<std::string, Json::Value> pkgCache;
@@ -189,7 +189,11 @@ namespace require
 
         try
         {
-            fileContents = cppFs::readFile(finalPath);
+            if (swc::tsIsInstalled()) {
+                fileContents = swc::transpile(finalPath);
+            } else {
+                fileContents = cppFs::readFile(finalPath);
+            }
         }
         catch (const std::runtime_error &error)
         {

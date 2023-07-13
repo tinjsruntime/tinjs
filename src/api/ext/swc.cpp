@@ -3,6 +3,14 @@
 
 namespace swc
 {
+    std::string tsPath = "";
+
+    std::string initTs(std::string path)
+    {
+        tsPath = path;
+        return tsPath;
+    }
+
     std::string runcmdandreturnout(std::string cmd)
     {
         std::string data;
@@ -22,9 +30,19 @@ namespace swc
         return data;
     }
 
-    std::string transpile(std::string binPath, std::string filename)
+    bool tsIsInstalled()
     {
-        std::string cmd = binPath + " compile " + filename;
+        return tsPath != "";
+    }
+
+    std::string transpile(std::string filename)
+    {
+        if (tsPath == "")
+        {
+            throw std::runtime_error("Typescript compiler not specified");
+        }
+
+        std::string cmd = tsPath + " compile " + filename;
         std::string output = runcmdandreturnout(cmd);
         output.erase(0, output.find("\n") + 1);
         return output;

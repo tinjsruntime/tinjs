@@ -1,0 +1,1 @@
+module.exports.default = require('./a.ts').foo
