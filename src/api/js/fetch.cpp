@@ -38,14 +38,13 @@ namespace fetch
     {
         if (argumentCount < 1)
         {
-            *exception = JSValueMakeString(ctx, JSStringCreateWithUTF8CString(
-                                                    "fetch function expects atleast one argument"));
+            setError(exception, "fetch function expects atleast one argument");
             return JSValueMakeUndefined(ctx);
         }
 
         if (!JSValueIsString(ctx, arguments[0]))
         {
-            *exception = JSValueMakeString(ctx, JSStringCreateWithUTF8CString("fetch expects a string as the first argument"));
+            setError(exception, "fetch expects a string as the first argument");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -122,8 +121,8 @@ namespace fetch
         CURLcode res = curl_easy_perform(curl);
         if (res != CURLE_OK)
         {
-            // Throw an exception if the request fails
-            *exception = JSValueMakeString(ctx, JSStringCreateWithUTF8CString(curl_easy_strerror(res)));
+            setError(exception, curl_easy_strerror(res));
+            return JSValueMakeUndefined(ctx);
         }
 
         long http_code = 0;

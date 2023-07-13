@@ -17,17 +17,12 @@ namespace fsMod {
     JSValueRef readFileCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                                 const JSValueRef arguments[], JSValueRef *exception) {
         if (argumentCount != 1) {
-            JSStringRef error = JSStringCreateWithUTF8CString("readFile requires 1 argument");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "readFile requires 1 argument");
             return JSValueMakeUndefined(ctx);
         }
 
-        // check if argument is a string
         if (!JSValueIsString(ctx, arguments[0])) {
-            JSStringRef error = JSStringCreateWithUTF8CString("readFile requires a string argument");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "readFile requires first argument to be a string");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -36,9 +31,7 @@ namespace fsMod {
         struct stat buffer2;
 
         if (stat(str.c_str(), &buffer2) != 0) {
-            JSStringRef error = JSStringCreateWithUTF8CString("file does not exist");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "File does not exist");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -54,23 +47,15 @@ namespace fsMod {
         return JSValueMakeString(ctx, result);
     }
 
-// writeFileCallback
-
     JSValueRef writeFileCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                                  const JSValueRef arguments[], JSValueRef *exception) {
-        // check if argumentCount is 2
         if (argumentCount != 2) {
-            JSStringRef error = JSStringCreateWithUTF8CString("writeFile requires 2 arguments");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "writeFile requires 2 arguments");
             return JSValueMakeUndefined(ctx);
         }
 
-        // check if argument is a string
         if (!JSValueIsString(ctx, arguments[0]) && !JSValueIsString(ctx, arguments[1])) {
-            JSStringRef error = JSStringCreateWithUTF8CString("writeFile requires both arguments to be strings");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "writeFile requires both arguments to be strings");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -86,23 +71,15 @@ namespace fsMod {
         return JSValueMakeUndefined(ctx);
     }
 
-// appendFileCallback
-
     JSValueRef appendFileCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                                   const JSValueRef arguments[], JSValueRef *exception) {
-        // check if argumentCount is 2
         if (argumentCount != 2) {
-            JSStringRef error = JSStringCreateWithUTF8CString("appendFile requires 2 arguments");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "appendFile requires 2 arguments");
             return JSValueMakeUndefined(ctx);
         }
 
-        // check if argument is a string
         if (!JSValueIsString(ctx, arguments[0]) && !JSValueIsString(ctx, arguments[1])) {
-            JSStringRef error = JSStringCreateWithUTF8CString("appendFile requires both arguments to be strings");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "appendFile requires both arguments to be strings");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -118,23 +95,15 @@ namespace fsMod {
         return JSValueMakeUndefined(ctx);
     }
 
-// rmFileCallback
-
     JSValueRef rmFileCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                               const JSValueRef arguments[], JSValueRef *exception) {
-        // check if argumentCount is 1
         if (argumentCount != 1) {
-            JSStringRef error = JSStringCreateWithUTF8CString("rmFile requires 1 argument");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "rmFile requires 1 argument");
             return JSValueMakeUndefined(ctx);
         }
 
-        // check if argument is a string
         if (!JSValueIsString(ctx, arguments[0])) {
-            JSStringRef error = JSStringCreateWithUTF8CString("rmFile requires a string argument");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "rmFile requires a string argument");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -143,9 +112,7 @@ namespace fsMod {
         struct stat buffer2;
 
         if (stat(str.c_str(), &buffer2) != 0) {
-            JSStringRef error = JSStringCreateWithUTF8CString("file does not exist");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "File does not exist");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -156,19 +123,13 @@ namespace fsMod {
 
     JSValueRef existsCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                               const JSValueRef arguments[], JSValueRef *exception) {
-        // check if argumentCount is 1
         if (argumentCount != 1) {
-            JSStringRef error = JSStringCreateWithUTF8CString("exists requires 1 argument");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "exists requires 1 argument");
             return JSValueMakeUndefined(ctx);
         }
 
-        // check if argument is a string
         if (!JSValueIsString(ctx, arguments[0])) {
-            JSStringRef error = JSStringCreateWithUTF8CString("exists requires a string argument");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "exists requires a string argument");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -184,7 +145,6 @@ namespace fsMod {
     }
 
     JSObjectRef init_fs_module(JSContextRef context, JSObjectRef *exports) {
-        // add readFile function to exports
         JSStringRef readFile = JSStringCreateWithUTF8CString("readFile");
         JSObjectSetProperty(context, *exports, readFile,
                             JSObjectMakeFunctionWithCallback(context, nullptr, readFileCallback),

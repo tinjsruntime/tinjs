@@ -46,7 +46,7 @@ namespace require
         }
         catch (const std::runtime_error &error)
         {
-            *exception = JSValueMakeString(ctx, JSStringCreateWithUTF8CString(error.what()));
+            setError(exception, error.what());
             return "";
         }
 
@@ -58,7 +58,7 @@ namespace require
         }
         catch (const std::runtime_error &error)
         {
-            *exception = JSValueMakeString(ctx, JSStringCreateWithUTF8CString(error.what()));
+            setError(exception, error.what());
             return "";
         }
 
@@ -71,7 +71,7 @@ namespace require
     {
         if (argumentCount != 1)
         {
-            *exception = JSValueMakeString(ctx, JSStringCreateWithUTF8CString("require expects exactly one argument"));
+            setError(exception, "require expects exactly one argument");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -113,7 +113,7 @@ namespace require
             
             if (_pkg == Json::nullValue)
             {
-                *exception = JSValueMakeString(ctx, JSStringCreateWithUTF8CString("package not found"));
+                setError(exception, "Package not found");
                 return JSValueMakeUndefined(ctx);
             }
 
@@ -166,8 +166,7 @@ namespace require
             {
                 if (scopeStr != "test")
                 {
-                    *exception = JSValueMakeString(ctx, JSStringCreateWithUTF8CString(
-                                                            "test module can only be required in test scope (run the cli with ./tin test instead of ./tin run)"));
+                    setError(exception, "tin:test module can only be required in test scope (run the cli with ./tin test instead of ./tin run)");
                     return JSValueMakeUndefined(ctx);
                 }
 
@@ -181,7 +180,7 @@ namespace require
             }
             else
             {
-                *exception = JSValueMakeString(ctx, JSStringCreateWithUTF8CString("module not found"));
+                setError(exception, "Native Module has not found");
                 return JSValueMakeUndefined(ctx);
             }
         }
@@ -194,7 +193,7 @@ namespace require
         }
         catch (const std::runtime_error &error)
         {
-            *exception = JSValueMakeString(ctx, JSStringCreateWithUTF8CString(error.what()));
+            setError(exception, error.what());
             return JSValueMakeUndefined(ctx);
         }
 

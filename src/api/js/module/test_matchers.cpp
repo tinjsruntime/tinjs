@@ -7,27 +7,39 @@ using namespace jscUtil;
 
 namespace testMatchers
 {
+    std::string redExpect(std::string againstr) {
+        return getColor("red") + "✗ " + againstr + getColor("reset");
+    }
+
+    std::string yellowReceived(std::string valuestr) {
+        return getColor("yellow") + " > " + valuestr + getColor("reset");
+    }
+
+    JSObjectRef getMeta(JSContextRef ctx, JSObjectRef obj) {
+        auto _meta = JSStringCreateWithUTF8CString("_meta");
+        auto meta = JSValueToObject(ctx, JSObjectGetProperty(ctx, obj, _meta, nullptr), nullptr);
+        JSStringRelease(_meta);
+        return meta;
+    }
+
+    bool hasErrored(JSContextRef ctx, JSObjectRef meta) {
+        auto errorString = JSStringCreateWithUTF8CString("error");
+        auto errorValue = JSObjectGetProperty(ctx, meta, errorString, nullptr);
+        JSStringRelease(errorString);
+        return JSValueToBoolean(ctx, errorValue);
+    }
+
     JSValueRef toEqualCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                                const JSValueRef arguments[], JSValueRef *exception)
     {
-        auto _meta = JSStringCreateWithUTF8CString("_meta");
-        auto meta = JSValueToObject(ctx, JSObjectGetProperty(ctx, thisObject, _meta, nullptr), nullptr);
-        JSStringRelease(_meta);
+        auto meta = getMeta(ctx, thisObject);
 
-        auto error = JSStringCreateWithUTF8CString("error");
-        auto errorValue = JSObjectGetProperty(ctx, meta, error, nullptr);
-        JSStringRelease(error);
-
-        if (JSValueToBoolean(ctx, errorValue))
-        {
+        if (hasErrored(ctx, meta)) {
             return JSValueMakeUndefined(ctx);
         }
 
-        if (argumentCount != 1)
-        {
-            auto __error = JSStringCreateWithUTF8CString("toEqual requires 1 argument");
-            *exception = JSValueMakeString(ctx, __error);
-            JSStringRelease(__error);
+        if (argumentCount != 1)  {
+            setError(exception, "toEqual requires 1 argument");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -46,10 +58,7 @@ namespace testMatchers
             auto againstr = toString(ctx, arguments[0]);
             auto valuestr = toString(ctx, value);
 
-            std::string out = getColor("red") + getColor("bold") + "Expected: " + getColor("reset") +
-                              getColor("red") + againstr + "\n" +
-                              getColor("yellow") + getColor("bold") + "Received: " + getColor("reset") + getColor("yellow") +
-                              valuestr + getColor("reset");
+            auto out = redExpect(againstr) + yellowReceived(valuestr);
 
             JSObjectSetProperty(ctx, nmeta, message, JSValueMakeString(ctx, JSStringCreateWithUTF8CString(out.c_str())),
                                 kJSPropertyAttributeNone, nullptr);

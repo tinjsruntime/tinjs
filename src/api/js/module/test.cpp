@@ -15,25 +15,19 @@ namespace testMod
     {
         if (argumentCount != 2)
         {
-            auto error = JSStringCreateWithUTF8CString("describe requires 2 arguments");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "describe requires 2 arguments");
             return JSValueMakeUndefined(ctx);
         }
 
         if (!JSValueIsString(ctx, arguments[0]))
         {
-            auto error = JSStringCreateWithUTF8CString("describe requires a string argument");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "describe requires first argument to be a string");
             return JSValueMakeUndefined(ctx);
         }
 
         if (!JSValueIsObject(ctx, arguments[1]))
         {
-            auto error = JSStringCreateWithUTF8CString("describe requires a function argument");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "describe requires second argument to be a function");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -59,25 +53,19 @@ namespace testMod
 
         if (argumentCount != 2)
         {
-            auto error = JSStringCreateWithUTF8CString("describe requires 2 arguments");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "test requires 2 arguments");
             return JSValueMakeUndefined(ctx);
         }
 
         if (!JSValueIsString(ctx, arguments[0]))
         {
-            auto error = JSStringCreateWithUTF8CString("describe requires a string argument");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "test requires the first argument to be a string");
             return JSValueMakeUndefined(ctx);
         }
 
         if (!JSValueIsObject(ctx, arguments[1]))
         {
-            auto error = JSStringCreateWithUTF8CString("describe requires a function argument");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "test requires the second argument to be a function");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -144,9 +132,7 @@ namespace testMod
     {
         if (argumentCount != 1)
         {
-            auto error = JSStringCreateWithUTF8CString("expect requires 1 argument");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "Expect requires atleast 1 argument");
             return JSValueMakeUndefined(ctx);
         }
 

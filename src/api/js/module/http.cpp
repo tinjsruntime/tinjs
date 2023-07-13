@@ -90,25 +90,19 @@ namespace httpMod
 
         if (argumentCount != 2)
         {
-            auto error = JSStringCreateWithUTF8CString((proc + " requires 2 arguments").c_str());
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, proc + " requires 2 arguments");
             return JSValueMakeUndefined(ctx);
         }
 
         if (!JSValueIsString(ctx, arguments[0]))
         {
-            auto error = JSStringCreateWithUTF8CString((proc + " requires first argument to be a string").c_str());
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, proc + " requires first argument to be a string");
             return JSValueMakeUndefined(ctx);
         }
 
         if (!JSValueIsObject(ctx, arguments[1]))
         {
-            auto error = JSStringCreateWithUTF8CString((proc + " requires second argument to be a function").c_str());
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, proc + " requires second argument to be a function");
             return JSValueMakeUndefined(ctx);
         }
 
@@ -218,9 +212,7 @@ namespace httpMod
     {
         if (argumentCount != 1)
         {
-            auto error = JSStringCreateWithUTF8CString("listen requires 2 arguments");
-            *exception = JSValueMakeString(ctx, error);
-            JSStringRelease(error);
+            setError(exception, "listen requires 2 arguments");
             return JSValueMakeUndefined(ctx);
         }
 

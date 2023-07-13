@@ -9,5 +9,6 @@ namespace jscUtil {
     std::string toString(JSContextRef ctx, JSValueRef value);
     int getArrayLength(JSContextRef ctx, JSObjectRef array);
     std::string getColor(std::string color);
+    void setError(JSValueRef *exception, std::string message);
 }
 #endif

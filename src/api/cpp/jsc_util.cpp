@@ -49,4 +49,10 @@ namespace jscUtil {
         int length = JSValueToNumber(ctx, count, nullptr);
         return length;
     }
+
+    void setError(JSValueRef *exception, std::string message) {
+        auto error = JSStringCreateWithUTF8CString(message.c_str());
+        *exception = JSValueMakeString(JSContextGetGlobalContext(nullptr), error);
+        JSStringRelease(error);
+    }
 }
