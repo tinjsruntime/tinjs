@@ -11,6 +11,8 @@ declare global {
         last(): T;
     }
 
+    var exports: any;
+
     function require(id: 'tin:test'): {
         expect: (actual: any) => {
             toEqual: (expected: any) => void;

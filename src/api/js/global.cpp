@@ -13,15 +13,9 @@ namespace global {
 
     void define(JSContextRef context, JSObjectRef *globalObject, std::string dirname, std::string fullname,
                 JSValueRef *exception, JSObjectRef *exportsObject, std::string mode) {
-        // Create module system
-        auto moduleObject = JSObjectMake(context, nullptr, nullptr);
-        auto moduleKey = JSStringCreateWithUTF8CString("module");
-        JSObjectSetProperty(context, JSContextGetGlobalObject(context), moduleKey, moduleObject,
-                            kJSPropertyAttributeNone, nullptr);
-        JSStringRelease(moduleKey);
 
         auto exportsKey = JSStringCreateWithUTF8CString("exports");
-        JSObjectSetProperty(context, moduleObject, exportsKey, *exportsObject, kJSPropertyAttributeNone, nullptr);
+        JSObjectSetProperty(context, *globalObject, exportsKey, *exportsObject, kJSPropertyAttributeNone, nullptr);
         JSStringRelease(exportsKey);
 
         auto print = JSStringCreateWithUTF8CString("print");
