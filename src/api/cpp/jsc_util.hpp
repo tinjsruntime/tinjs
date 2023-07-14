@@ -1,5 +1,4 @@
-#ifndef JSC_UTIL_HPP
-#define JSC_UTIL_HPP
+#pragma once
 #include <JavaScriptCore/JavaScript.h>
 #include <string>
 #include <map>
@@ -11,4 +10,3 @@ namespace jscUtil {
     std::string getColor(std::string color);
     void setError(JSValueRef *exception, std::string message);
 }
-#endif

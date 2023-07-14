@@ -1,3 +1,4 @@
+#pragma once
 #include <JavaScriptCore/JavaScript.h>
 
 namespace fsMod {

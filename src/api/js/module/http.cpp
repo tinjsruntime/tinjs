@@ -8,7 +8,7 @@
 #include <variant>
 
 using namespace jscUtil;
-// http server, not client
+
 namespace httpMod
 {
     httplib::Server svr;
@@ -63,30 +63,17 @@ namespace httpMod
         return obj;
     }
 
-    JSValueRef anyCallback(JSContextRef ctx, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception, int pOrC)
+    enum Methods : int {
+        GET,
+        POST,
+        PUT,
+        PATCH,
+        DELETE
+    };
+
+    JSValueRef anyCallback(JSContextRef ctx, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception, Methods pOrC)
     {
         std::string proc;
-
-        switch (pOrC)
-        {
-        case 0:
-            proc = "get";
-            break;
-        case 1:
-            proc = "post";
-            break;
-        case 2:
-            proc = "put";
-            break;
-        case 3:
-            proc = "patch";
-            break;
-        case 4:
-            proc = "delete";
-            break;
-        default:
-            throw std::runtime_error("Invalid pOrC value");
-        }
 
         if (argumentCount != 2)
         {
@@ -111,23 +98,23 @@ namespace httpMod
         {
             switch (pOrC)
             {
-            case 0:
-                svr.Get(pattern, handler);
-                break;
-            case 1:
-                svr.Post(pattern, handler);
-                break;
-            case 2:
-                svr.Put(pattern, handler);
-                break;
-            case 3:
-                svr.Patch(pattern, handler);
-                break;
-            case 4:
-                svr.Delete(pattern, handler);
-                break;
-            default:
-                throw std::runtime_error("Invalid pOrC value (#2)");
+                case 0:
+                    svr.Get(pattern, handler);
+                    break;
+                case 1:
+                    svr.Post(pattern, handler);
+                    break;
+                case 2:
+                    svr.Put(pattern, handler);
+                    break;
+                case 3:
+                    svr.Patch(pattern, handler);
+                    break;
+                case 4:
+                    svr.Delete(pattern, handler);
+                    break;
+                default:
+                    throw std::runtime_error("Invalid pOrC value (#2)");
             }
         };
 
@@ -183,27 +170,27 @@ namespace httpMod
 
     JSValueRef getCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
     {
-        return anyCallback(ctx, argumentCount, arguments, exception, 0);
+        return anyCallback(ctx, argumentCount, arguments, exception, Methods::GET);
     }
 
     JSValueRef postCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
     {
-        return anyCallback(ctx, argumentCount, arguments, exception, 1);
+        return anyCallback(ctx, argumentCount, arguments, exception, Methods::POST);
     }
 
     JSValueRef putCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
     {
-        return anyCallback(ctx, argumentCount, arguments, exception, 2);
+        return anyCallback(ctx, argumentCount, arguments, exception, Methods::PUT);
     }
 
     JSValueRef patchCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
     {
-        return anyCallback(ctx, argumentCount, arguments, exception, 3);
+        return anyCallback(ctx, argumentCount, arguments, exception, Methods::PATCH);
     }
 
     JSValueRef deleteCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)
     {
-        return anyCallback(ctx, argumentCount, arguments, exception, 4);
+        return anyCallback(ctx, argumentCount, arguments, exception, Methods::DELETE);
     }
 
     JSValueRef listenCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception)

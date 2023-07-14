@@ -1,10 +1,6 @@
 (function () {
     const { expect, describe, test } = require('tin:test');
 
-    function _str(s) {
-        return JSON.stringify(s);
-    }
-
     describe('http', () => {
         test('GET', () => {
             const { response } = fetch('http://localhost:3099/');
