@@ -14,8 +14,11 @@ declare global {
     var exports: any;
 
     function require(id: 'tin:test'): {
-        expect: (actual: any) => {
-            toEqual: (expected: any) => void;
+        expect: <const T>(actual: T) => {
+            toBeBoolean: () => T extends boolean ? true : false;
+            toBeBool: () => T extends boolean ? true : false;
+            toEqual: <Y>(expected: Y) => boolean
+            toBeTrue: () => T extends true ? true : false;
         };
         describe: (name: string, fn: () => void) => void;
         test: (name: string, fn: () => void) => void;

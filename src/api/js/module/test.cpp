@@ -147,6 +147,22 @@ namespace testMod
         JSObjectSetProperty(ctx, obj, toEqual, JSObjectMakeFunctionWithCallback(ctx, toEqual, testMatchers::toEqualCallback),
                             kJSPropertyAttributeNone, NULL);
 
+        auto toBeTrue = JSStringCreateWithUTF8CString("toBeTrue");
+        JSObjectSetProperty(ctx, obj, toBeTrue, JSObjectMakeFunctionWithCallback(ctx, toBeTrue, testMatchers::toBeTrueCallback),
+                            kJSPropertyAttributeNone, NULL);
+
+        auto toBeBoolean = JSStringCreateWithUTF8CString("toBeBoolean");
+        JSObjectSetProperty(ctx, obj, toBeBoolean, JSObjectMakeFunctionWithCallback(ctx, toBeBoolean, testMatchers::toBeBooleanCallback),
+                            kJSPropertyAttributeNone, NULL);
+
+        auto toBeBool = JSStringCreateWithUTF8CString("toBeBool");
+        JSObjectSetProperty(ctx, obj, toBeBool, JSObjectMakeFunctionWithCallback(ctx, toBeBool, testMatchers::toBeBoolCallback),
+                            kJSPropertyAttributeNone, NULL);
+
+        JSStringRelease(value);
+        JSStringRelease(toEqual);
+        JSStringRelease(toBeTrue);
+        JSStringRelease(toBeBoolean);
         return obj;
     }
 

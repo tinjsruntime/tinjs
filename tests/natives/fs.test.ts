@@ -46,7 +46,7 @@
         });
 
         test('exists()', () => {
-            expect(fs.exists(tmpHW)).toEqual(true);
+            expect(fs.exists(tmpHW)).toBeTrue();
         });
 
         test('rmFile() - Cleanup ' + tmpHW, () => {

@@ -5,7 +5,7 @@
 
     describe('Array', () => {
         test('random()', () => {
-            expect(arr.includes(arr.random())).toEqual(true);
+            expect(arr.includes(arr.random())).toBeTrue();
         });
 
         test('first()', () => {

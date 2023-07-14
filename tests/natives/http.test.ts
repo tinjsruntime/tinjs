@@ -38,5 +38,7 @@
         return { content: { message: 'PATCH' }, type: 'json' };
     });
 
+    println("For executing the main test run the 'tin test _http.test.ts' command in a new terminal.");
+    println("When you are done, shutdown this server by pressing Ctrl+C.")
     server.listen(port);
 })();

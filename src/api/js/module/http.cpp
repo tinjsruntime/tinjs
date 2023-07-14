@@ -215,7 +215,6 @@ namespace httpMod
         }
 
         auto port = JSValueToNumber(ctx, arguments[0], exception);
-
         svr.listen("0.0.0.0", (int)port);
         return JSValueMakeUndefined(ctx);
     }
