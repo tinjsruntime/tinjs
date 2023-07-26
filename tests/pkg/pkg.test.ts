@@ -6,13 +6,13 @@
 
     describe('example', () => {
         test('isEven', () => {
-            expect(isEven(1)).toEqual(false);
+            expect(isEven(1)).toBeFalse();
             expect(isEven(2)).toBeTrue();
         })
 
         test('isOdd - isEven as dep.', () => {
             expect(isOdd(1)).toBeTrue();
-            expect(isOdd(2)).toEqual(false);
+            expect(isOdd(2)).toBeFalse();
         });
     });
 })();

@@ -113,6 +113,45 @@ namespace testMatchers
         return JSValueMakeUndefined(ctx);
     }
 
+    JSValueRef toBeFalseCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
+                                const JSValueRef arguments[], JSValueRef *exception)
+    {
+        auto meta = getMeta(ctx, thisObject);
+
+        if (hasErrored(ctx, meta)) {
+            return JSValueMakeUndefined(ctx);
+        }
+
+        if (argumentCount != 0)  {
+            setError(exception, "toBeFalse requires no arguments");
+            return JSValueMakeUndefined(ctx);
+        }
+
+        auto value = JSObjectGetProperty(ctx, thisObject, JSStringCreateWithUTF8CString("_value"), nullptr);
+
+        bool ret = !JSValueToBoolean(ctx, value);
+
+        if (!ret)
+        {
+            auto nmeta = JSObjectMake(ctx, NULL, NULL);
+            auto error = JSStringCreateWithUTF8CString("error");
+            auto message = JSStringCreateWithUTF8CString("message");
+            JSObjectSetProperty(ctx, nmeta, error, JSValueMakeBoolean(ctx, true), kJSPropertyAttributeNone, nullptr);
+
+            auto valuestr = toString(ctx, value);
+
+            auto out = redExpect("false") + yellowReceived(valuestr);
+
+            JSObjectSetProperty(ctx, nmeta, message, JSValueMakeString(ctx, JSStringCreateWithUTF8CString(out.c_str())),
+                                kJSPropertyAttributeNone, nullptr);
+
+            JSObjectSetProperty(ctx, JSContextGetGlobalObject(ctx), JSStringCreateWithUTF8CString("_meta"), nmeta,
+                                kJSPropertyAttributeNone, nullptr);
+        }
+
+        return JSValueMakeUndefined(ctx);
+    }
+
     JSValueRef toEqualCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount,
                                const JSValueRef arguments[], JSValueRef *exception)
     {

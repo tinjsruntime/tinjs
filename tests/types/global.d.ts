@@ -19,6 +19,7 @@ declare global {
             toBeBool: () => T extends boolean ? true : false;
             toEqual: <Y>(expected: Y) => boolean
             toBeTrue: () => T extends true ? true : false;
+            toBeFalse: () => T extends false ? true : false;
         };
         describe: (name: string, fn: () => void) => void;
         test: (name: string, fn: () => void) => void;

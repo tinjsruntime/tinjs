@@ -51,7 +51,7 @@
 
         test('rmFile() - Cleanup ' + tmpHW, () => {
             fs.rmFile(tmpHW);
-            expect(fs.exists(tmpHW)).toEqual(false);
+            expect(fs.exists(tmpHW)).toBeFalse();
         });
     })
 
